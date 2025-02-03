@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    
+    // allowImportingTsExtensions를 사용하기 위해 emitDeclarationOnly를 true로 설정
+    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true,
+    
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["vite.config.ts"]
+}
