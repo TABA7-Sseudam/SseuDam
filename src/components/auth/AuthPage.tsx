@@ -1,57 +1,80 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
 
-export function LoginPage() {
+export function AuthPage() {
+  const [isLogin, setIsLogin] = useState(true);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
-      <h2 className="text-3xl font-bold mb-2">로그인</h2>
-      <p className="text-gray-500 mb-6">가장 최근의 기술을 통해 로그인하세요.</p>
-
-      <Card className="p-6 w-full max-w-md">
-        <input type="email" placeholder="이메일 입력" className="border p-2 rounded w-full mb-4" />
-        <input type="password" placeholder="비밀번호 입력" className="border p-2 rounded w-full mb-4" />
-        <Button className="w-full bg-black text-white">로그인</Button>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <Card className="p-8 w-full max-w-md text-center bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold mb-6">
+          {isLogin ? "로그인" : "회원가입"}
+        </h2>
+        {isLogin ? <LoginPage /> : <RegisterPage />}
+        <Button
+          className="mt-6 w-full bg-black text-white"
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          {isLogin ? "회원가입하기" : "로그인하기"}
+        </Button>
       </Card>
-
-      <h3 className="text-xl font-bold mt-10">소셜 로그인</h3>
-      <div className="flex flex-col gap-4 mt-4">
-        <Button className="flex items-center gap-2">😀 Google</Button>
-        <Button className="flex items-center gap-2">😊 Kakao</Button>
-        <Button className="flex items-center gap-2">😁 Naver</Button>
-      </div>
-
-      <h3 className="text-xl font-bold mt-10">추가 기능</h3>
-      <div className="flex flex-col gap-4 mt-4">
-        <Button className="flex items-center gap-2">🕵️‍♂️ 비밀번호 찾기/회원가입</Button>
-        <Button className="flex items-center gap-2">👤 게스트로 체험하기</Button>
-      </div>
     </div>
   );
 }
 
-export function RegisterPage() {
+// ✅ 로그인 페이지 (관리자 바로 이동, 일반 사용자 로그인 제한)
+function LoginPage() {
+  const navigate = useNavigate();
+
+  const handleAdminLogin = () => {
+    localStorage.setItem("user", "admin");
+    navigate("/home"); // ✅ 관리자 로그인 후 메인 페이지로 이동
+    window.location.reload(); // ✅ UI 업데이트
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
-      <h1 className="text-4xl font-bold mb-4">간편하게 가입하고 친환경 활동을 시작하세요!</h1>
-      <p className="text-gray-500 mb-6">최적가입을 위해 아래 정보를 입력하세요.</p>
+    <div className="flex flex-col gap-4">
+      <input type="email" placeholder="이메일 입력 (일반 로그인 불가)" className="border p-2 rounded w-full" disabled />
+      <input type="password" placeholder="비밀번호 입력 (회원가입 후 로그인 가능)" className="border p-2 rounded w-full" disabled />
+      
+      {/* ✅ 관리자 로그인 버튼 (즉시 메인 페이지 이동) */}
+      <Button className="w-full bg-red-500 text-white" onClick={handleAdminLogin}>
+        관리자 로그인 (Admin)
+      </Button>
 
-      <Card className="p-6 w-full max-w-md">
-        <input type="text" placeholder="이름" className="border p-2 rounded w-full mb-4" />
-        <input type="email" placeholder="이메일" className="border p-2 rounded w-full mb-4" />
-        <input type="password" placeholder="비밀번호 (6자 이상, 영문, 숫자 포함)" className="border p-2 rounded w-full mb-4" />
-        <input type="password" placeholder="비밀번호 확인" className="border p-2 rounded w-full mb-4" />
-        <Button className="w-full bg-black text-white">회원가입</Button>
-      </Card>
+      {/* ✅ 게스트 체험 버튼 */}
+      <Button className="w-full bg-gray-500 text-white" onClick={() => {
+        localStorage.setItem("user", "guest");
+        navigate("/home"); // ✅ 게스트 로그인 후 메인 페이지 이동
+        window.location.reload();
+      }}>
+        게스트 체험하기 (Guest)
+      </Button>
+    </div>
+  );
+}
 
-      <h3 className="text-xl font-bold mt-10">소셜 계정으로 더 쉽게 가입하기</h3>
-      <div className="flex flex-col gap-4 mt-4">
-        <Button className="flex items-center gap-2">Google ID로 가입</Button>
-        <Button className="flex items-center gap-2">Kakao ID로 가입</Button>
-        <Button className="flex items-center gap-2">Naver ID로 가입</Button>
-      </div>
+// ✅ 회원가입 페이지 (일반 사용자는 회원가입 후 로그인 가능)
+function RegisterPage() {
+  const navigate = useNavigate();
 
-      <h3 className="text-xl font-bold mt-10">이미 회원가입한 계정이 있으신가요?</h3>
-      <Button className="mt-4 bg-black text-white">로그인하기</Button>
+  const handleRegister = () => {
+    localStorage.setItem("user", "user"); // ✅ 회원가입 시 일반 사용자로 저장
+    navigate("/auth"); // ✅ 회원가입 후 로그인 페이지로 이동
+    window.location.reload();
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <input type="text" placeholder="이름" className="border p-2 rounded w-full" />
+      <input type="email" placeholder="이메일 입력" className="border p-2 rounded w-full" />
+      <input type="password" placeholder="비밀번호 (6자 이상)" className="border p-2 rounded w-full" />
+      <input type="password" placeholder="비밀번호 확인" className="border p-2 rounded w-full" />
+      <Button className="w-full bg-black text-white" onClick={handleRegister}>
+        회원가입 완료 후 로그인하기
+      </Button>
     </div>
   );
 }
