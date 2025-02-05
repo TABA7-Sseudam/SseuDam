@@ -18,7 +18,7 @@ export function UserProfile() {
 
       {/* 오른쪽 버튼 */}
       <div className="flex gap-4">
-        <Button variant="outline">포인트 및 리워드</Button>
+        <Button variant="outline" onClick={() => navigate("/rewards")}>포인트 및 리워드</Button>
         <Button className="bg-black text-white" onClick={() => navigate("/waste-analysis")}>
           분리배출 시작
         </Button>
