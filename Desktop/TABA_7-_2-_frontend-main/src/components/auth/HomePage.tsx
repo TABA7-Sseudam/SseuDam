@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"; // ❌ useLocation() 제거
 import { useEffect, useState } from "react";
-import { Header } from "../shared/Header";
 import { UserProfile } from "../profile/UserProfile";
 import { RecyclingStats } from "../dashboard/RecyclingStats";
 import { motion } from "framer-motion";
@@ -34,10 +33,9 @@ function HomePage() {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header />
       <main className="container mx-auto px-4 py-8 flex-grow">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-          
+
           {isGuest && (
             <div className="text-center text-gray-600 bg-gray-100 p-4 rounded-md mb-6">
               <p>🔹 현재 <b>게스트 계정</b>으로 접속 중입니다.</p>
@@ -58,7 +56,7 @@ function HomePage() {
           )}
         </motion.div>
       </main>
-      
+
       <footer className="border-t py-6">
         <div className="container mx-auto px-4 text-center text-sm text-gray-500">
           Copyright © 2025 분리배출 AI 시스템. All Rights Reserved.

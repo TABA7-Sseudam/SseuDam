@@ -1,8 +1,7 @@
-// src/components/shared/Header.tsx
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '../ui/button';
-import { Menu, X } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,18 +10,16 @@ export function Header() {
   return (
     <header className="border-b bg-white">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <h1 
+        {/* ✅ 홈 버튼 클릭 시 `/home`으로 이동 */}
+        <h1
           className="text-xl font-bold cursor-pointer"
-          onClick={() => navigate("/home")} // ✅ 클릭하면 홈으로 이동
+          onClick={() => navigate("/home")}
         >
           분리배출 AI 시스템
         </h1>
-        
+
         {/* 모바일 메뉴 버튼 */}
-        <button 
-          className="md:hidden"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
+        <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
