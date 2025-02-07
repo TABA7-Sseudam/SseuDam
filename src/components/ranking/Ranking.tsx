@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FaCrown, FaUser } from "react-icons/fa";
-import { Area, AreaChart, CartesianGrid, XAxis, Tooltip } from "recharts";
-import { users } from "@/components/ranking/Ranking_user";
+import { useState } from "react"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { FaCrown, FaUser } from "react-icons/fa"
+import { Area, AreaChart, CartesianGrid, XAxis, Tooltip } from "recharts"
+import { users } from "@/components/ranking/Ranking_user"
 
 const chartData = [
   { week: "5주전", 사용자: 100, 주민평균: 250 },
@@ -12,42 +12,43 @@ const chartData = [
   { week: "2주전", 사용자: 500, 주민평균: 200 },
   { week: "1주전", 사용자: 350, 주민평균: 450 },
   { week: "이번주", 사용자: 200, 주민평균: 150 },
-];
+]
 
 export function Ranking() {
-  const [timeFrame, setTimeFrame] = useState("thisWeek");
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
+  const [timeFrame, setTimeFrame] = useState("thisWeek")
+  const [selectedComplex, setSelectedComplex] = useState("1단지")
+  const [currentPage, setCurrentPage] = useState(1)
+  const usersPerPage = 10
 
   const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
+    if (currentPage > 1) setCurrentPage(currentPage - 1)
+  }
 
   const handleNextPage = () => {
-    if (currentPage < 5) setCurrentPage(currentPage + 1);
-  };
+    if (currentPage < 5) setCurrentPage(currentPage + 1)
+  }
 
   const currentUsers = users.slice(
     (currentPage - 1) * usersPerPage,
     currentPage * usersPerPage
-  );
+  )
 
   const placeholderUsers = Array.from({ length: usersPerPage }, (_, index) => ({
     rank: (currentPage - 1) * usersPerPage + index + 1,
     name: "--",
-    username: "--",
+    // username 필드 제거됨
     title: "--",
     avatar: "",
     weeklyPoints: 0,
     totalPoints: 0,
-  }));
+  }))
 
-  const displayedUsers = currentUsers.length ? currentUsers : placeholderUsers;
+  const displayedUsers = currentUsers.length ? currentUsers : placeholderUsers
 
   const topContributors = [
     {
       name: "김영희",
-      username: "@101동",
+      // username 필드 제거됨
       title: "🌟에코 히어로",
       avatar: "",
       stats: { total: 12000, monthly: 1500 },
@@ -56,7 +57,7 @@ export function Ranking() {
     },
     {
       name: "김철수",
-      username: "@105동",
+      // username 필드 제거됨
       title: "🌍지구 지키미",
       avatar: "",
       stats: { total: 8000, monthly: 1300 },
@@ -65,34 +66,54 @@ export function Ranking() {
     },
     {
       name: "홍길동",
-      username: "@103동",
+      // username 필드 제거됨
       title: "🗑 분리배출 견습생",
       avatar: "",
       stats: { total: 7500, monthly: 1100 },
       bgColor: "bg-orange-100",
       crownColor: "text-orange-400",
     },
-  ];
+  ]
 
   return (
     <div className="container mx-auto p-6 bg-white">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold flex items-center gap-2">
-          티베로 아파트 분리수거 랭킹 <FaCrown className="text-yellow-500" />
+          부영아파트 1단지 분리수거 랭킹 <FaCrown className="text-yellow-500" />
         </h1>
-        <div className="flex gap-2">
-          <Button 
-            className={timeFrame === "thisWeek" ? "bg-black text-white" : "bg-white border border-black text-black"}
-            onClick={() => setTimeFrame("thisWeek")}
-          >
-            This Week
-          </Button>
-          <Button 
-            className={timeFrame === "lastWeek" ? "bg-black text-white" : "bg-white border border-black text-black"}
-            onClick={() => setTimeFrame("lastWeek")}
-          >
-            This Month
-          </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2">
+            {["1단지", "2단지", "3단지"].map((complex) => (
+              <Button
+                key={complex}
+                onClick={() => setSelectedComplex(complex)}
+                className={
+                  selectedComplex === complex
+                    ? "bg-green-200 text-green-800 border border-green-400"
+                    : "bg-white border border-black text-black"
+                }
+              >
+                {complex}
+              </Button>
+            ))}
+          </div>
+
+          <div className="h-6 border-l-2 border-gray-300 mx-2"></div>
+
+          <div className="flex gap-2">
+            <Button 
+              className={timeFrame === "thisWeek" ? "bg-black text-white" : "bg-white border border-black text-black"}
+              onClick={() => setTimeFrame("thisWeek")}
+            >
+              This Week
+            </Button>
+            <Button 
+              className={timeFrame === "lastWeek" ? "bg-black text-white" : "bg-white border border-black text-black"}
+              onClick={() => setTimeFrame("lastWeek")}
+            >
+              This Month
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -107,7 +128,7 @@ export function Ranking() {
               </div>
             </div>
             <h2 className="text-xl font-bold mb-1">{user.name}</h2>
-            <p className="text-gray-500 mb-2">{user.username}</p>
+            {/* username 표시 부분 제거됨 */}
             <Button variant="secondary" className="mb-4 bg-green-100 text-green-800">{user.title}</Button>
 
             <div className="text-gray-600">
@@ -234,5 +255,5 @@ export function Ranking() {
         </div>
       </div>
     </div>
-  );
-} 
+  )
+}

@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import HomePage from "@/components/auth/HomePage";
 import { AuthPage } from "@/components/auth/AuthPage";
 import { WasteAnalysisPage } from "@/components/analysis/WasteAnalysisPage";
-import { Rewards } from "@/components/reward/Rewards";
 import { SettingsPage } from "@/components/settings/SettingsPage";
 import { Header } from "@/components/shared/Header";
 import { Ranking } from "@/components/ranking/Ranking"
@@ -34,8 +33,6 @@ function App() {
             {/* ✅ 분리배출 분석 페이지 */}
             <Route path="/waste-analysis" element={<WasteAnalysisPage />} />
 
-            {/* ✅ 리워드 페이지 */}
-            <Route path="/rewards" element={<Rewards />} />
 
             {/* ✅ 가이드 페이지 */}
             <Route path="/guide" element={<GuidePage />} />
