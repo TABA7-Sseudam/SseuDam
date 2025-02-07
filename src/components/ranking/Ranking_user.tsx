@@ -8,7 +8,7 @@ export const users = [
     stats: { total: 12000, monthly: 1500 },
     bgColor: "bg-yellow-100",
     crownColor: "text-yellow-400",
-    weeklyPoints: 1500,
+    monthlyPoints: 1500,
     totalPoints: 12000,
   },
   {
@@ -20,7 +20,7 @@ export const users = [
     stats: { total: 8000, monthly: 1000 },
     bgColor: "bg-gray-200",
     crownColor: "text-gray-400",
-    weeklyPoints: 1300,
+    monthlyPoints: 1300,
     totalPoints: 8000,
   },
   {
@@ -32,7 +32,7 @@ export const users = [
     stats: { total: 7500, monthly: 1500 },
     bgColor: "bg-orange-100",
     crownColor: "text-orange-400",
-    weeklyPoints: 1100,
+    monthlyPoints: 1100,
     totalPoints: 2300,
   },
   {
@@ -41,7 +41,7 @@ export const users = [
     username: "@102동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 900,
+    monthlyPoints: 900,
     totalPoints: 7000,
   },
   {
@@ -50,7 +50,7 @@ export const users = [
     username: "@106동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 850,
+    monthlyPoints: 850,
     totalPoints: 6800,
   },
   {
@@ -59,7 +59,7 @@ export const users = [
     username: "@107동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 800,
+    monthlyPoints: 800,
     totalPoints: 6700,
   },
   {
@@ -68,7 +68,7 @@ export const users = [
     username: "@108동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 750,
+    monthlyPoints: 750,
     totalPoints: 6600,
   },
   {
@@ -77,7 +77,7 @@ export const users = [
     username: "@109동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 700,
+    monthlyPoints: 700,
     totalPoints: 6500,
   },
   {
@@ -86,7 +86,7 @@ export const users = [
     username: "@110동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 650,
+    monthlyPoints: 650,
     totalPoints: 6400,
   },
   {
@@ -95,7 +95,7 @@ export const users = [
     username: "@111동",
     title: "🌍지구 지키미",
     avatar: "",
-    weeklyPoints: 600,
+    monthlyPoints: 600,
     totalPoints: 6300,
   },
 ];
