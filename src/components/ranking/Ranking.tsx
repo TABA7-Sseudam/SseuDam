@@ -66,7 +66,7 @@ export function Ranking() {
     {
       name: "홍길동",
       username: "@103동",
-      title: "🌍지구 지키미",
+      title: "🗑 분리배출 견습생",
       avatar: "",
       stats: { total: 7500, monthly: 1100 },
       bgColor: "bg-orange-100",
@@ -111,7 +111,7 @@ export function Ranking() {
             <Button variant="secondary" className="mb-4 bg-green-100 text-green-800">{user.title}</Button>
 
             <div className="text-gray-600">
-              <p>누적🌿: {user.stats?.total ?? 0} &nbsp;&nbsp;&nbsp; 이번 주🌿: {user.stats?.monthly ?? 0}</p>
+              <p>This week's ECO exp🌱: {user.stats?.monthly ?? 0}</p>
             </div>
           </Card>
         ))}
@@ -132,12 +132,12 @@ export function Ranking() {
               <div className="w-full bg-gray-200 h-4 rounded mt-2 mb-1">
                 <div className="bg-green-400 h-4 rounded" style={{ width: "20%" }}></div>
               </div>
-              <p className="text-gray-600 text-sm">에코 에너지🌿: 2000 / 10000 EXP</p>
+              <p className="text-gray-600 text-sm">Eco XP🌱: 2000 / 10000 EXP</p>
               <p className="text-gray-600 text-sm">등급 상승까지 8000 EXP 남았습니다!</p>
             </div>
             <div className="text-center text-4xl font-bold text-black border-l-4 border-black pl-6">
               🎯 26위
-              <p className="text-green-600 text-sm mt-2">27위와 1000🌿 차이!</p>
+              <p className="text-green-600 text-sm mt-2">27위와 1000🌱 차이!</p>
             </div>
           </div>
           <div className="border-t-2 border-gray-300 my-4"></div>
@@ -146,17 +146,17 @@ export function Ranking() {
               <FaUser size={40} className="text-black" />
             </div>
             <div className="flex-grow">
-              <h2 className="text-xl font-bold">티맥스</h2>
-              <p className="text-gray-600">🌍지구 지키미</p>
+              <h2 className="text-xl font-bold">티베로</h2>
+              <p className="text-gray-600">💀 환경 테러범</p>
               <div className="w-full bg-gray-200 h-4 rounded mt-2 mb-1">
                 <div className="bg-green-400 h-4 rounded" style={{ width: "10%" }}></div>
               </div>
-              <p className="text-gray-600 text-sm">에코 에너지🌿: 1000 / 10000 EXP</p>
-              <p className="text-gray-600 text-sm">티맥스님이 맹추격중!</p>
+              <p className="text-gray-600 text-sm">Eco XP🌱: 1000 / 10000 EXP</p>
+              <p className="text-gray-600 text-sm">티베로님이 맹 추격중!</p>
             </div>
             <div className="text-center text-4xl font-bold text-black border-l-4 border-black pl-6">
               🎯 27위
-              <p className="text-green-600 text-sm mt-2">최근 7일, 1500🌿 상승!</p>
+              <p className="text-green-600 text-sm mt-2">최근 7일, 1500🌱 상승!</p>
             </div>
           </div>
         </Card>
@@ -210,8 +210,8 @@ export function Ranking() {
               <div className="w-full bg-gray-200 h-4 rounded mt-2 mb-1">
                 <div className="bg-green-400 h-4 rounded" style={{ width: `${(user.weeklyPoints / 10000) * 100}%` }}></div>
               </div>
-              <p className="text-gray-600 text-sm">이번주 획득 에코 에너지🌿: {user.weeklyPoints} / 10000 EXP</p>
-              <p className="text-gray-600 text-sm">누적 에너지🌿: {user.totalPoints}</p>
+              <p className="text-gray-600 text-sm">This week Eco XP🌱: {user.weeklyPoints} / 10000 EXP</p>
+              <p className="text-gray-600 text-sm">Total Eco XP🌱: {user.totalPoints}</p>
             </div>
           </Card>
         ))}

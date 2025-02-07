@@ -8,6 +8,9 @@ import { Header } from "@/components/shared/Header";
 import { Ranking } from "@/components/ranking/Ranking"
 import { GuidePage } from "./components/guide/GuidePage";
 import { AccountSettingsPage } from './components/settings/AccountSettingsPage';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
