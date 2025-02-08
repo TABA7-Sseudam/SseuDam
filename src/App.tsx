@@ -1,15 +1,21 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "@/components/auth/HomePage";
-import { AuthPage } from "@/components/auth/AuthPage";
-import { WasteAnalysisPage } from "@/components/analysis/WasteAnalysisPage";
-import { SettingsPage } from "@/components/settings/SettingsPage";
-import { Header } from "@/components/shared/Header";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import HomePage from "@/components/auth/HomePage"
+import { AuthPage } from "@/components/auth/AuthPage"
+import { WasteAnalysisPage } from "@/components/analysis/WasteAnalysisPage"
+import { SettingsPage } from "@/components/settings/SettingsPage"
+import { Header } from "@/components/shared/Header"
 import { Ranking } from "@/components/ranking/Ranking"
-import { GuidePage } from "./components/guide/GuidePage";
-import { AccountSettingsPage } from './components/settings/AccountSettingsPage';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { GuidePage } from "./components/guide/GuidePage"
+import { AccountSettingsPage } from './components/settings/AccountSettingsPage'
+import { RankTierGuide } from "@/components/ranking/Rank_Tier_Guide"  
+
+
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min'
+
+
 
 function App() {
   return (
@@ -33,7 +39,6 @@ function App() {
             {/* ✅ 분리배출 분석 페이지 */}
             <Route path="/waste-analysis" element={<WasteAnalysisPage />} />
 
-
             {/* ✅ 가이드 페이지 */}
             <Route path="/guide" element={<GuidePage />} />
 
@@ -41,14 +46,14 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/settings/account" element={<AccountSettingsPage />} />
 
-            
-            {/* ✅ 랭킹 라우트 추가 */}
+            {/* ✅ 랭킹 및 등급 페이지 라우트 추가 */}
             <Route path="/ranking" element={<Ranking />} />
+            <Route path="/ranking/rank_tier_guide" element={<RankTierGuide />} />  {/* ✅ 추가된 라우트 */}
           </Routes>
         </main>
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
