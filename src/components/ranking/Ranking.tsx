@@ -6,8 +6,9 @@ import { FaCrown, FaUser } from "react-icons/fa"
 import { Area, AreaChart, CartesianGrid, XAxis, Tooltip } from "recharts"
 import { users } from "@/components/ranking/Ranking_user"
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { Tooltip as BootstrapTooltip } from "bootstrap"
+import Dropdown from 'react-bootstrap/Dropdown'
+
 
 // 차트 데이터
 const chartData = [
@@ -178,24 +179,19 @@ export function Ranking() {
         </h1>
 
         {/* 드롭다운 */}
-        <div className="dropdown">
-          <button
-            className="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            style={{ minWidth: '150px' }}
-          >
+        <Dropdown>
+          <Dropdown.Toggle variant="secondary" id="dropdown-basic" style={{ minWidth: '150px' }}>
             {timeFrame === "thismonth" ? "공주 아파트" : timeFrame === "lastmonth" ? "왕자 아파트" : "종합 랭킹"}
-          </button>
-          <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><button className="dropdown-item" onClick={() => setTimeFrame("thismonth")}>공주 아파트</button></li>
-            <li><button className="dropdown-item" onClick={() => setTimeFrame("lastmonth")}>왕자 아파트</button></li>
-            <li><button className="dropdown-item" onClick={() => setTimeFrame("total")}>종합 랭킹</button></li>
-          </ul>
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => setTimeFrame("thismonth")}>공주 아파트</Dropdown.Item>
+            <Dropdown.Item onClick={() => setTimeFrame("lastmonth")}>왕자 아파트</Dropdown.Item>
+            <Dropdown.Item onClick={() => setTimeFrame("total")}>종합 랭킹</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         </div>
-      </div>
+
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {topContributors.map((user, index) => (
