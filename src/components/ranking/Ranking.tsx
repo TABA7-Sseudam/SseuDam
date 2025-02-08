@@ -162,8 +162,7 @@ export function Ranking() {
     <div className="container mx-auto p-6 bg-white">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold flex items-center gap-2">
-          대림 1동 분리수거 랭킹 
-          <FaCrown className="text-yellow-500" />
+        🏅대림 1동 분리수거 랭킹 
 
           {/* 아이콘 버튼 수정: 크기, 색상, 툴팁 */}
           <button 
@@ -271,7 +270,7 @@ export function Ranking() {
         </div>
       </div>
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">랭킹보드</h2>
+        <h2 className="text-2xl font-bold mb-4">🏆랭킹보드</h2>
         {displayedUsers.map((user) => (
           <Card key={user.rank} className="flex items-center p-4 mb-2 shadow-sm">
             <span className="text-xl font-bold w-12">{user.rank}위</span>
