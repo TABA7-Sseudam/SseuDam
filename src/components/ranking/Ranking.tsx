@@ -288,9 +288,14 @@ export function Ranking() {
             <Card className="p-6 h-[350px] flex justify-center items-center">
               <div>
                 <h2 className="text-xl font-bold mb-4 text-center">월별 획득 포인트</h2>
-                <AreaChart width={550} height={250} data={chartData}>
+                <AreaChart width={600} height={250} data={chartData}>
                   <CartesianGrid vertical={false} />
-                  <XAxis dataKey="month" />
+                  <XAxis 
+                      dataKey="month" 
+                      type="category" 
+                      interval={0}
+                      padding={{ left: 20, right: 20 }} // 공백을 줘서 양 끝이 짤리지 않게끔
+                    />
                   <RechartTooltip />
                   <Area dataKey="주민평균" type="monotone" fill="rgba(34, 202, 236, 0.4)" stroke="rgb(34, 202, 236)" />
                   <Area dataKey="사용자" type="monotone" fill="rgba(255, 99, 132, 0.4)" stroke="rgb(255, 99, 132)" />
