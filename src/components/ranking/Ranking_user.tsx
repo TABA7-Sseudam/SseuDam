@@ -32,7 +32,7 @@ const gongjuUsers: User[] = [
   { rank: 8, name: "하늘콩", grade: "🌍지구 지키미", apartment: "공주아파트", monthlyPoints: 700, totalPoints: 6500 },
   { rank: 9, name: "초코칩", grade: "🌿지구 친구", apartment: "공주아파트", monthlyPoints: 650, totalPoints: 3200 },
   { rank: 10, name: "쓰레기맨", grade: "💀환경 테러범", apartment: "공주아파트", monthlyPoints: 600, totalPoints: 950 },
-  { rank: 11, name: "바나나킥", grade: "💀환경 테러범", apartment: "공주아파트", monthlyPoints: 400, totalPoints: 970 }
+  { rank: 11, name: "일쓰봉", grade: "💀환경 테러범", apartment: "공주아파트", monthlyPoints: 400, totalPoints: 970 }
 ]
 
 // ✅ 왕자아파트 유저 데이터
@@ -41,7 +41,7 @@ const princeUsers: User[] = [
   { rank: 2, name: "햇살미소", grade: "🌍지구 지키미", apartment: "왕자아파트", bgColor: "bg-gray-200", crownColor: "text-gray-400", monthlyPoints: 1350, totalPoints: 8500 },
   { rank: 3, name: "분리짱짱", grade: "🗑 분리배출 견습생", apartment: "왕자아파트", bgColor: "bg-orange-100", crownColor: "text-orange-400", monthlyPoints: 1100, totalPoints: 3100 },
   { rank: 4, name: "지구뿌셔", grade: "🌍지구 지키미", apartment: "왕자아파트", monthlyPoints: 950, totalPoints: 7100 },
-  { rank: 5, name: "코끼리콩콩", grade: "🌿지구 친구", apartment: "왕자아파트", monthlyPoints: 870, totalPoints: 5200 },
+  { rank: 5, name: "티니핑", grade: "🌿지구 친구", apartment: "왕자아파트", monthlyPoints: 870, totalPoints: 5200 },
   { rank: 6, name: "다람쥐짱", grade: "🌿지구 친구", apartment: "왕자아파트", monthlyPoints: 820, totalPoints: 4600 },
   { rank: 7, name: "푸른별빛", grade: "🌍지구 지키미", apartment: "왕자아파트", monthlyPoints: 770, totalPoints: 6700 },
   { rank: 8, name: "하늘토끼", grade: "🌍지구 지키미", apartment: "왕자아파트", monthlyPoints: 720, totalPoints: 6600 },

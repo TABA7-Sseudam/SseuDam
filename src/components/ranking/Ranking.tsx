@@ -96,7 +96,7 @@ const EcoProgressBar = ({ totalXP, grade }: { totalXP: number, grade: string }) 
           <p className="text-lg font-bold text-green-600">{totalXP} XP</p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-600">승급까지 필요 XP</p>
+          <p className="text-sm text-gray-600">다음 등급 XP</p>
           <p className="text-lg font-bold text-gray-600">{levelUpPoints} XP</p>
         </div>
       </div>
