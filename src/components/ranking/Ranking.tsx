@@ -53,7 +53,7 @@ const UserCard = ({
         <div className="flex-grow relative pr-20">
           <h2 className="text-xl font-bold">{name}</h2>
           <p className="text-gray-600">{grade}</p>
-          <div className="w-[120%] bg-gray-200 h-4 rounded mt-2 mb-1 relative">
+          <div className="w-[130%] bg-gray-200 h-4 rounded mt-2 mb-1 relative">
             <div className="bg-green-400 h-4 rounded" style={{ width: `${(xp / 10000) * 100}%` }}></div>
             <div className="absolute top-0 right-0 h-full border-l-4 border-black"></div>
           </div>
