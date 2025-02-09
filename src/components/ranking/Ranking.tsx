@@ -57,7 +57,7 @@ const UserCard = ({
             <div className="bg-green-400 h-4 rounded" style={{ width: `${(xp / 10000) * 100}%` }}></div>
             <div className="absolute top-0 right-0 h-full border-l-4 border-black"></div>
           </div>
-          <p className="text-gray-600 text-sm">이번달 획득 Eco XP🌱: {xp} / 10000 EXP</p>
+          <p className="text-gray-600 text-sm">이번달 획득 Eco XP🌱: {xp} / 10000</p>
           <p className="text-gray-600 text-sm">{message}</p>
         </div>
         <div className="flex flex-col justify-center items-center text-4xl font-bold text-black pl-4 w-44">
@@ -85,7 +85,7 @@ const EcoProgressBar = ({ totalXP, grade }: { totalXP: number, grade: string }) 
         <div className="h-full bg-green-500 rounded-full" style={{ width: `${progressPercentage}%` }}></div>
         <div className="absolute -top-8 z-20" style={{ left: `${progressPercentage}%`, transform: 'translateX(-50%)' }}>
           <div className="bg-black text-white text-xs px-3 py-1 rounded-full shadow-md whitespace-nowrap flex items-center gap-1">
-            💰 {remainingPoints} Eco XP 남음!
+             🌱 {remainingPoints} Eco XP 남음!
             <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black rotate-45"></div>
           </div>
         </div>
@@ -238,7 +238,7 @@ export function Ranking() {
               <h2 className="text-xl font-bold mb-1">{user.name}</h2>
               <Button variant="secondary" className="mb-4 bg-green-100 text-green-800">{user.grade}</Button>
               <p>이번달 획득 Eco XP🌱: {user.monthlyPoints}</p>
-              <p>총 획득 Eco XP🌿: {user.totalPoints}</p>
+              <p>총 획득 Eco XP🌳: {user.totalPoints}</p>
             </Card>
           );
         })}
@@ -249,31 +249,35 @@ export function Ranking() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {/* 사용자 카드 섹션 (현재 사용자 기준 -1위, 현재, +1위) */}
           <Card className="p-0 overflow-hidden border border-gray-300 rounded-lg flex flex-col h-full">
-            {userCards.map((user, idx) => {
-              let rankDifference = '';
-              if (user.name === currentUserName) {
-                const percent = Math.round(((currentIndex + 1) / sortedUsers.length) * 100);
-                rankDifference = `상위 ${percent}% 진입!`;
-              } else if (user.position === 'above') {
-                rankDifference = `${sortedUsers[currentIndex].monthlyPoints - user.monthlyPoints}🌱 차이!`;
-              } else if (user.position === 'below') {
-                rankDifference = `${user.name}님이 맹 추격중!`;
-              }
-              return (
-                <UserCard
-                  key={user.name}
-                  name={user.name}
-                  grade={user.grade}
-                  xp={user.monthlyPoints}
-                  message={`총 획득 Eco XP🌿: ${user.totalPoints}`}
-                  rank={`${sortedUsers.findIndex(u => u.name === user.name) + 1}위`}
-                  rankDifference={rankDifference}
-                  highlight={user.name === currentUserName}
-                  isFirst={idx === 0}
-                  isLast={idx === (userCards.length - 1)}
-                />
-              );
-            })}
+          {userCards.map((user, idx) => {
+            let rankDifference = ''
+            
+            if (user.name === currentUserName) {
+              const percent = Math.round(((currentIndex + 1) / sortedUsers.length) * 100)
+              rankDifference = `상위 ${percent}%`
+            } else if (user.position === 'above') {
+              const difference = Math.abs(sortedUsers[currentIndex].monthlyPoints - user.monthlyPoints)
+              rankDifference = `${difference}🌱 차이!`
+            } else if (user.position === 'below') {
+              rankDifference = `${user.name}님이 맹 추격중!`
+            }
+
+            return (
+              <UserCard
+                key={user.name}
+                name={user.name}
+                grade={user.grade}
+                xp={user.monthlyPoints}
+                message={`총 획득 Eco XP🌳: ${user.totalPoints}`}
+                rank={`${sortedUsers.findIndex(u => u.name === user.name) + 1}위`}
+                rankDifference={rankDifference}
+                highlight={user.name === currentUserName}
+                isFirst={idx === 0}
+                isLast={idx === (userCards.length - 1)}
+              />
+            )
+          })}
+
           </Card>
 
           {/* 나의 등급 및 차트 섹션 */}
@@ -313,8 +317,8 @@ export function Ranking() {
                   <div className="w-full bg-gray-200 h-4 rounded mt-2 mb-1">
                     <div className="bg-green-400 h-4 rounded" style={{ width: `${(user.monthlyPoints / 10000) * 100}%` }}></div>
                   </div>
-                  <p className="text-gray-600 text-sm">이번달 획득 Eco XP🌱: {user.monthlyPoints} / 10000 EXP</p>
-                  <p className="text-gray-600 text-sm">총 획득 Eco XP🌿: {user.totalPoints}</p>
+                  <p className="text-gray-600 text-sm">이번달 획득 Eco XP🌱: {user.monthlyPoints} / 10000</p>
+                  <p className="text-gray-600 text-sm">총 획득 Eco XP🌳: {user.totalPoints}</p>
                 </div>
               </Card>
             );
