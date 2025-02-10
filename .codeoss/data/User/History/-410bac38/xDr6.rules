@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Admin 체크 함수 수정
+    function isAdmin() {
+      return request.auth != null && request.auth.token.role == 'admin';
+    }
+
+    // Users 컬렉션
+    match /users/{userId} {
+      // Admin이 문서를 생성할 수 있도록 수정
+      allow create: if isAdmin();
+      
+      // 읽기 권한 수정 - null 체크 추가
+      allow read: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin());
+        
+      allow update: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin());
+        
+      allow delete: if isAdmin();
+
+      // 사용자 세션
+      match /user_sessions/{sessionId} {
+        allow read, write: if request.auth != null && 
+          (request.auth.uid == userId || isAdmin());
+      }
+
+      // 활동 로그 - 관리자 읽기 권한 수정
+      match /user_activity_logs/{logId} {
+        allow read: if isAdmin();
+        // 관리자가 로그를 생성할 수 있도록 수정
+        allow create: if isAdmin();
+        allow write, update, delete: if isAdmin();
+      }
+
+      // 이메일 인증
+      match /email_verifications/{verificationId} {
+        allow create: if request.auth != null;
+        allow read: if request.auth != null && 
+          (request.auth.uid == userId || isAdmin());
+      }
+    }
+  }
+}

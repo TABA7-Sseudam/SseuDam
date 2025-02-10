@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 인증된 사용자 확인
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // 관리자 확인
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // 본인 확인
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // users 컬렉션 규칙
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // user_sessions 컬렉션 규칙
+    match /user_sessions/{sessionId} {
+      allow read, write: if isAuthenticated() && 
+        request.auth.uid == resource.data.userId;
+    }
+
+    // oauth_accounts 컬렉션 규칙
+    match /oauth_accounts/{accountId} {
+      allow read: if isAuthenticated() &&
+        (request.auth.uid == resource.data.userId || isAdmin());
+      allow write: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+    }
+
+    // user_activity_logs 컬렉션 규칙
+    match /user_activity_logs/{logId} {
+      allow read: if isAuthenticated() && 
+        (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+      allow update, delete: if isAdmin();
+    }
+  }
+}

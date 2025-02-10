@@ -1,0 +1,62 @@
+npm error Invalid Version: 2z.3.0
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_15_03_774Z-debug-0.log
+[Warn  - 8:15:04 AM] Component Analysis Error: Error: Command failed: npm i --package-lock-only --prefix /home/yun777567/my-firebase-project
+npm error Invalid Version: 2z.3.0
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_15_03_774Z-debug-0.log
+
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: my-firebase-project@1.0.0
+npm error Found: firebase@11.3.0
+npm error node_modules/firebase
+npm error   firebase@"^11.3.0" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer firebase@"^10.0.0" from @firebase/rules-unit-testing@3.0.4
+npm error node_modules/@firebase/rules-unit-testing
+npm error   dev @firebase/rules-unit-testing@"^3.0.1" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /home/yun777567/.npm/_logs/2025-02-10T08_16_54_510Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_16_54_510Z-debug-0.log
+[Warn  - 8:16:57 AM] Component Analysis Error: Error: Command failed: npm i --package-lock-only --prefix /home/yun777567/my-firebase-project
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: my-firebase-project@1.0.0
+npm error Found: firebase@11.3.0
+npm error node_modules/firebase
+npm error   firebase@"^11.3.0" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer firebase@"^10.0.0" from @firebase/rules-unit-testing@3.0.4
+npm error node_modules/@firebase/rules-unit-testing
+npm error   dev @firebase/rules-unit-testing@"^3.0.1" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /home/yun777567/.npm/_logs/2025-02-10T08_16_54_510Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_16_54_510Z-debug-0.log
+
+npm error Invalid Version: 2z.3.0
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_27_28_910Z-debug-0.log
+[Warn  - 8:27:33 AM] Component Analysis Error: Error: Command failed: npm i --package-lock-only --prefix /home/yun777567/my-firebase-project
+npm error Invalid Version: 2z.3.0
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_27_28_910Z-debug-0.log
+
+npm error Invalid Version: 2z.3.0
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_27_34_162Z-debug-0.log
+[Warn  - 8:27:38 AM] Component Analysis Error: Error: Command failed: npm i --package-lock-only --prefix /home/yun777567/my-firebase-project
+npm error Invalid Version: 2z.3.0
+npm error A complete log of this run can be found in: /home/yun777567/.npm/_logs/2025-02-10T08_27_34_162Z-debug-0.log
+

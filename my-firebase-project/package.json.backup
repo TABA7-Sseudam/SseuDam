@@ -1,0 +1,25 @@
+{
+  "name": "my-firebase-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest",
+    "test:rules": "jest rules.test.ts",
+    "emulator": "firebase emulators:start"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.0",
+    "dotenv": "^16.4.1",
+    "firebase": "^10.7.1"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.1",
+    "@types/jest": "^29.5.11",
+    "firebase-admin": "^12.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3",
+    "tsconfig-paths": "^4.2.0"
+  }
+}

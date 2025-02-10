@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 기본 함수들
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.role == 'admin';
+    }
+
+    function isUser(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Users 컬렉션
+    match /users/{userId} {
+      // 기본 CRUD 권한
+      allow create: if isAdmin();
+      allow read: if isAuthenticated() && (isUser(userId) || isAdmin());
+      allow update: if isAuthenticated() && (isUser(userId) || isAdmin());
+      allow delete: if isAdmin();
+
+      // 사용자 세션
+      match /user_sessions/{sessionId} {
+        allow read, write: if isAuthenticated() && (isUser(userId) || isAdmin());
+      }
+
+      // 비밀번호 재설정
+      match /password_resets/{resetId} {
+        // 생성은 인증된 사용자만 가능
+        allow create: if isAuthenticated();
+        // 읽기, 수정, 삭제는 불가능
+        allow read, update, delete: if false;
+      }
+
+      // 활동 로그
+      match /user_activity_logs/{logId} {
+        allow read: if isAdmin();
+        allow create: if isAdmin();
+        allow update, delete: if false;
+      }
+
+      // 이메일 인증
+      match /email_verifications/{verificationId} {
+        allow create: if isAuthenticated();
+        allow read: if isAuthenticated() && isUser(userId);
+        allow update, delete: if false;
+      }
+
+      // 랭킹 계정
+      match /rank_accounts/{rankAccountId} {
+        allow read: if true;  // 공개 읽기 허용
+        allow create, update: if isAdmin();
+        allow delete: if false;
+      }
+
+      // 분석 결과 데이터
+      match /AnalyisResult_data/{analysisResultId} {
+        allow read: if isAuthenticated() && (isUser(userId) || isAdmin());
+        allow create, update, delete: if isAdmin();
+      }
+    }
+  }
+}

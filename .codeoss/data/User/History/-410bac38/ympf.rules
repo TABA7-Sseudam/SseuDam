@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users 컬렉션
+    match /users/{userId} {
+      allow create: if false; // 클라이언트 측 사용자 생성을 방지합니다. Firebase 인증 및 클라우드 함수를 사용하세요.
+      allow read: if request.auth.uid == userId
+                  || isAdmin(); // 사용자는 자신의 데이터를 읽을 수 있고, 관리자는 모든 데이터를 읽을 수 있습니다.
+      allow update: if request.auth.uid == userId
+                  || isAdmin(); // 사용자는 자신의 데이터를 업데이트할 수 있고, 관리자는 모든 데이터를 업데이트할 수 있습니다.
+      allow delete: if isAdmin(); // 관리자만 사용자를 삭제할 수 있습니다.
+
+      match /user_sessions/{sessionId} { // 사용자 세션 하위 컬렉션, sessionId는 토큰 자체일 수 있습니다.
+        allow read, write, update, delete: if request.auth.uid == userId
+                                            || isAdmin(); // 사용자와 관리자는 세션을 관리할 수 있습니다.
+      }
+
+      match /password_resets/{resetId} { // 비밀번호 재설정 하위 컬렉션, resetId는 reset_token일 수 있습니다.
+        allow read, write, update, delete: if false; // 클라이언트 측 접근이 제한됩니다. 백엔드 함수에서 관리하는 것이 좋습니다.
+        allow create: if true; // 비밀번호 재설정 요청 시 생성을 허용합니다. 백엔드에서 속도 제한을 고려하세요.
+      }
+
+      match /user_activity_logs/{logId} { // 사용자 활동 로그 하위 컬렉션
+        allow read: if isAdmin(); // 관리자만 활동 로그를 읽을 수 있습니다.
+        allow create: if false; // 클라이언트 측 생성이 차단됩니다. 로그 생성은 서버 측에서 이루어져야 합니다.
+        allow write, update, delete: if false; // 클라이언트 측 수정이 불가능합니다.
+      }
+
+      match /email_verifications/{verificationId} { // 이메일 인증 하위 컬렉션, verificationId는 verification_token일 수 있습니다.
+        allow read, write, update, delete: if false; // 클라이언트 측 접근이 제한됩니다.
+        allow create: if true; // 이메일 인증 요청 시 생성을 허용합니다. 서버 측에서 만료 및 토큰 생성을 처리하세요.
+        allow update: if get(/databases/$(database)/documents/email_verifications/$(verificationId)).data.user_id == userId; // 사용자는 자신의 인증 문서를 업데이트할 수 있습니다 (예: 인증 완료 표시). **보안 참고**: 남용을 방지하기 위해 서버 측에서 적절한 인증 로직을 확실히 구현하세요. 더 안전한 방법은 함수를 사용하여 서버 측에서 전체 인증을 처리하는 것입니다.
+      }
+
+      match /rank_accounts/{rankAccountId} { // 랭킹 계정 하위 컬렉션
+        allow read: if true; // 랭킹 목적으로 공개적으로 읽을 수 있습니다. 랭킹 데이터가 민감한 경우 보안을 고려하세요.
+        allow write: if false; // 클라이언트 쓰기가 차단됩니다. 랭킹 업데이트는 서버 측에서 이루어져야 합니다 (AnalyisResult_data에 의해 트리거됨).
+        allow create, update: if isAdmin(); // 필요한 경우 관리자가 랭킹 계정을 수동으로 관리할 수 있습니다. 함수 기반 업데이트가 권장됩니다.
+      }
+
+      match /AnalyisResult_data/{analysisResultId} { // 분석 결과 데이터 하위 컬렉션
+        allow read: if request.auth.uid == userId
+                    || isAdmin(); // 사용자는 자신의 결과를 읽을 수 있고, 관리자는 모든 결과를 읽을 수 있습니다.
+        allow create: if false; // 클라이언트 생성이 차단됩니다. 결과는 분석 완료 시 서버 측에서 생성되어야 합니다.
+        allow write, update: if isAdmin(); // 관리자는 분석 결과를 관리할 수 있습니다. 함수가 분석을 기반으로 업데이트를 주로 처리해야 합니다.
+        allow delete: if isAdmin(); // 관리자는 분석 결과를 삭제할 수 있습니다.
+      }
+    }
+
+    // 최상위 컬렉션 (이러한 컬렉션이 필요한지, 그리고 사용자 데이터 접근 패턴에 따라 사용자 하위 컬렉션이 더 적절한지 고려하세요)
+
+    // 예시 - rank_accounts 및 AnalyisResult_data를 사용자 하위 컬렉션 대신 최상위 컬렉션으로 유지하기로 결정한 경우:
+
+    // match /rank_accounts/{rankAccountId} {
+    //   allow read: if true; // 또는 랭킹이 공개되어서는 안 되는 경우 인증된 읽기만 허용
+    //   allow write: if false;
+    //   allow create, update: if isAdmin();
+    // }
+
+    // match /AnalyisResult_data/{analysisResultId} {
+    //   allow read: if get(/databases/$(database)/documents/users/$(resource.data.user_id)).exists() || isAdmin(); // 사용자 존재 또는 관리자인 경우만 허용. AnalyisResult_data에 user_id 필드가 있다고 가정
+    //   allow write: if false;
+    //   allow create, update: if isAdmin();
+    // }
+
+
+    // 'admin' 역할을 가진 사용자인지 확인하는 함수입니다.
+    // **중요**: 사용자가 생성/관리자로 승격될 때 역할과 함께 커스텀 클레임을 설정하는 메커니즘을 구현하세요.
+    // 이 함수는 관리자 사용자에 대해 'admin' 값을 가진 커스텀 클레임 'role'을 설정했다고 가정합니다.
+    function isAdmin() {
+      return request.auth.token.role == 'admin';
+    }
+  }
+}

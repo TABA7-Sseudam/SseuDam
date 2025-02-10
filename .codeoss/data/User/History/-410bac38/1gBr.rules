@@ -1,0 +1,54 @@
+
+# printf로 직접 파일 쓰기
+printf "rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /user_sessions/{sessionId} {
+      allow read, write: if isAuthenticated() && 
+        request.auth.uid == resource.data.userId;
+    }
+
+    match /oauth_accounts/{accountId} {
+      allow read: if isAuthenticated() &&
+        (request.auth.uid == resource.data.userId || isAdmin());
+      allow write: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+    }
+
+    match /user_activity_logs/{logId} {
+      allow read: if isAuthenticated() && 
+        (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+      allow update, delete: if isAdmin();
+    }
+
+    match /email_verifications/{verificationId} {
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+      allow read: if isAuthenticated() && 
+        request.auth.uid == resource.data.userId;
+      allow update, delete: if isAdmin();
+    }
+  }
+}" > firestore.rules

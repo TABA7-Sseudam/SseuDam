@@ -1,0 +1,50 @@
+# 직접 파일 작성 (rules_version을 2로 변경)
+printf "rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+   function isAuthenticated() {
+     return request.auth != null;
+   }
+   
+   function isAdmin() {
+     return request.auth.token.admin == true;
+   }
+   
+   function isOwner(userId) {
+     return request.auth != null && request.auth.uid == userId;
+   }
+
+   match /users/{userId} {
+     allow read: if isOwner(userId) || isAdmin();
+     allow create: if isAuthenticated() && request.auth.uid == userId;
+     allow update: if isOwner(userId) || isAdmin();
+     allow delete: if isAdmin();
+   }
+
+   match /user_sessions/{sessionId} {
+     allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+     allow read, update, delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+   }
+
+   match /password_resets/{resetId} {
+     allow read, write: if isAuthenticated() && request.auth.uid == resource.data.userId;
+   }
+
+   match /user_activity_logs/{logId} {
+     allow read: if isOwner(resource.data.userId) || isAdmin();
+     allow create: if isAuthenticated();
+     allow update, delete: if isAdmin();
+   }
+
+   match /oauth_accounts/{accountId} {
+     allow read: if isOwner(resource.data.userId) || isAdmin();
+     allow write: if isOwner(resource.data.userId) || isAdmin();
+   }
+
+   match /email_verifications/{verificationId} {
+     allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+     allow read: if isOwner(resource.data.userId) || isAdmin();
+     allow update, delete: if isAdmin();
+   }
+ }
+}" > firestore.rules
