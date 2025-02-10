@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@shadcn/ui": "^0.0.4",
+    "@types/bootstrap": "^5.2.10",
     "@types/node": "^22.13.0",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",

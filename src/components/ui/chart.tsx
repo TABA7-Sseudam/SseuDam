@@ -10,7 +10,14 @@ export interface ChartConfig {
 
 export function ChartContainer({ config, children }: { config: ChartConfig; children: React.ReactNode }) {
   return (
-    <div style={{ width: "100%", height: 300 }}>
+    <div 
+      style={{ 
+        width: "100%", 
+        height: 300,
+        // config의 첫 번째 키의 색상을 사용
+        borderColor: Object.values(config)[0]?.color || 'transparent'
+      }}
+    >
       {children}
     </div>
   );
