@@ -41,21 +41,37 @@
 
 ## 📂 프로젝트 구조
 ├── .firebase/               # Firebase 캐시
+
 ├── .firebaserc             # Firebase 프로젝트 별칭 설정
+
 ├── .gitignore              # Git에서 제외할 파일/디렉터리 목록
+
 ├── firestore.indexes.json  # Firestore 인덱스 설정
+
 ├── firestore.rules         # Firestore 보안 규칙
+
 ├── firebase.json           # Firebase 프로젝트 설정
+
 ├── jest.config.js          # Jest 설정 파일
+
 ├── package.json            # 프로젝트 설정 파일 (Node.js)
+
 ├── src
+
 │   ├── lib
+
 │   │   └── firebase
+
 │   │       ├── auth.ts     # Firebase Authentication 서비스
+
 │   │       ├── db.ts       # Firestore 데이터베이스 서비스
+
 │   │       └── firebase.ts # Firebase 초기화 및 설정, 환경 변수 로딩, dotenv 설정
+
 │   └── tests
+
 │       └── rules.test.ts    # Firestore 보안 규칙 테스트
+
 └── tsconfig.json            # TypeScript 설정 파일
 
 ## 💻 개발 환경 설정 및 실행 방법
@@ -96,10 +112,12 @@
 5. **Firebase 에뮬레이터 실행**
    ```bash
    npm run emulator
-
-테스트 실행:
-전체 테스트: npm test
-보안 규칙 테스트: npm run test:rules
+6. **전체 테스트**
+7. ```bash
+   npm test
+8. **보안 규칙 테스트**
+9. ```bash
+   npm run test:rules
 
 배포 (Firebase 호스팅, 함수 등): firebase deploy 명령어를 사용하여 배포 (자세한 내용은 Firebase 문서 참조).
 
