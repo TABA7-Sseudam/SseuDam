@@ -1,152 +1,99 @@
-# ♻️ My Firebase Project - Recycling Project (with React + TypeScript + Vite Frontend)
+# React + TypeScript + Vite
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://example.com)
-[![Coverage Status](https://img.shields.io/badge/coverage-85%25-green.svg)](https://example.com)
 
-## 🚀 프로젝트 소개
 
-본 프로젝트는 Firebase를 활용한 재활용(Recycling) 애플리케이션 개발을 위한 백엔드 및 관리 시스템, 그리고 React, TypeScript, Vite를 사용한 프론트엔드 애플리케이션을 포함합니다. 사용자 인증, 데이터 관리, 보안 규칙, 테스트 등 Firebase의 다양한 기능을 활용하여 백엔드를 구축하고, 빠르고 효율적인 프론트엔드 개발 환경을 제공합니다.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🧱 기술 스택
 
-*   **백엔드:**
-    *   언어: TypeScript
-    *   프레임워크: Firebase (Authentication, Firestore, Cloud Functions)
-    *   테스팅: Jest
-    *   패키지 관리: npm
-    *   기타:
-        *   dotenv (환경 변수 관리)
-        *   tsconfig-paths (TypeScript 경로 매핑)
-*   **프론트엔드:**
-    *   언어: TypeScript
-    *   프레임워크: React
-    *   빌드 도구: Vite
-    *   상태 관리: (추후 추가 예정 - Redux, Zustand, Recoil 등)
-    *   스타일링: (추후 추가 예정 - Styled Components, Tailwind CSS 등)
-    *   테스팅: (추후 추가 예정 - Jest, React Testing Library)
-    *   ESLint, Prettier (코드 포맷팅 및 린팅)
 
-## ⚙️ 주요 기능
+Currently, two official plugins are available:
 
-*   **사용자 인증 (Firebase Authentication):**
-    *   이메일/비밀번호 기반 회원가입 및 로그인
-    *   로그아웃
-    *   프로필 업데이트 (이름, 주소, 위치, 아파트 정보)
-    *   이메일 인증
-    *   세션 관리 (IP 주소, 로그인/로그아웃 시간 기록)
-*   **데이터 관리 (Firestore):**
-    *   사용자 정보 (`users` 컬렉션): 사용자 정보, 역할, 이메일 인증 여부, 생성/수정 시간 등 저장
-    *   활동 로그 (`user_activity_logs` 컬렉션): 사용자 활동 기록 (로그인 성공/실패, 프로필 변경 등)
-    *   랭킹 계정 (`rank_accounts` 컬렉션): 사용자 랭킹 정보 저장
-    *   분석 결과 데이터 (`AnalyisResult_data` 컬렉션): 사용자별 분석 결과 저장
-    *   이메일 인증 (`email_verifications` 컬렉션): 이메일 인증 토큰 및 상태 관리
-*   **보안 규칙 (Firestore Security Rules):**
-    *   사용자, 관리자, 익명 사용자에 대한 접근 권한 제어
-    *   데이터 유효성 검사
-*   **테스트 (Jest):**
-    *   Firestore 보안 규칙 테스트 (`rules.test.ts`)
-    *   인증 및 데이터베이스 서비스 테스트 (별도 파일 예정)
-* **프론트엔드 (React + TypeScript + Vite)**
-    *   빠른 개발 환경 (HMR - Hot Module Replacement 지원)
-    *   ESLint를 이용한 코드 검사 및 자동 수정
-    *   타입스크립트 기반으로 안정적인 개발
-## 💻 개발 환경 설정 및 실행 방법
 
-1.  **필수 도구 설치:**
-    *   Node.js (v14 이상 권장)
-    *   npm (Node.js 패키지 매니저)
-    *   Firebase CLI
 
-2.  **프로젝트 클론:**
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 
-    ```bash
-    git clone <repository-url>
-    cd <project-directory>
-    ```
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-3.  **백엔드 의존성 설치:**
-     ```bash
-      npm install
-     ```
-4.  **프론트엔드 의존성 설치:**
 
-    ```bash
-    cd frontend
-    npm install
-    cd ..
-    ```
 
-5.  **Firebase 프로젝트 설정:**
-    *   Firebase 콘솔에서 새 프로젝트 생성
-    *   프로젝트 설정에서 웹 앱 추가 및 구성 정보 복사
-    *   프로젝트 루트에 `.env` 파일 생성 후 다음 환경 변수 설정 (Firebase 구성 정보):
+## Expanding the ESLint configuration
 
-    ```
-    NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-    NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
-    ```
 
-    *   **중요**: `.env` 파일은 보안을 위해 `.gitignore`에 추가되어 버전 관리에 포함되지 않도록 해야 합니다.
 
-6.  **Firebase 에뮬레이터 실행 (백엔드):**
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-    ```bash
-    npm run emulator
-    ```
 
-7.  **프론트엔드 개발 서버 실행:**
 
-    ```bash
-    cd frontend
-    npm run dev
-    ```
+- Configure the top-level `parserOptions` property like this:
 
-    브라우저에서 `http://localhost:5173` (또는 Vite 설정에 지정된 포트)에 접속하여 프론트엔드 앱을 확인합니다.
 
-8.  **백엔드 테스트 실행:**
 
-      * 전체 테스트:
-        ```bash
-        npm test
-        ```
-      * 보안 규칙 테스트:
-        ```bash
-        npm run test:rules
-        ```
+```js
 
-9.  **배포 (Firebase 호스팅, 함수 등):**
+export default tseslint.config({
 
-      * `firebase deploy` 명령어를 사용하여 배포 (자세한 내용은 Firebase 문서 참조).
-      * 프론트엔드는 `cd frontend && npm run build` 후, `firebase deploy --only hosting` 과 같이 배포할 수 있습니다.
+  languageOptions: {
 
-## 🧪 테스트
+    // other options...
 
-*   **Firestore 보안 규칙 테스트:** `rules.test.ts` 파일을 통해 에뮬레이터 환경에서 보안 규칙을 검증합니다.
-*   **인증 및 데이터베이스 서비스 테스트:** 별도의 테스트 파일을 작성하여 각 함수의 동작을 검증할 예정입니다.
-* **프론트엔드 테스트:** Jest와 React Testing Library를 사용하여 컴포넌트 및 유틸리티 함수 테스트를 작성할 예정입니다. (추후 추가)
+    parserOptions: {
 
-## 🤝 기여
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
 
-프로젝트에 대한 기여는 언제나 환영합니다. 버그 제보, 기능 제안, 코드 개선 등 다양한 방식으로 기여할 수 있습니다. Pull Request를 통해 기여해주세요.
+      tsconfigRootDir: import.meta.dirname,
 
-## 📝 라이선스
+    },
 
-[MIT License](LICENSE) (별도 라이선스 파일 추가 필요)
+  },
 
-## 📝 TODO
+})
 
-*   `getIPAddress` 헬퍼 함수 구현 (IP 주소 가져오기)
-*   `rank_accounts` 관련 로직을 별도의 서비스 파일로 분리 (백엔드)
-*   인증 및 데이터베이스 서비스 테스트 코드 작성 (백엔드)
-*   `logUserActivity` 함수 리팩토링 (파라미터를 객체 형태로 받도록 변경) (백엔드)
-*   Cloud Functions를 이용한 서버 로직 추가 (예: 사용자 분석, 알림 등) (백엔드)
-*   프론트엔드 UI 컴포넌트 개발
-*   프론트엔드 상태 관리 로직 구현 (Redux, Zustand, Recoil 등)
-*   프론트엔드 스타일링 적용 (Styled Components, Tailwind CSS 등)
-*   프론트엔드 테스트 코드 작성 (Jest, React Testing Library)
-*   백엔드와 프론트엔드 통합
+```
 
+
+
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+
+
+
+```js
+
+// eslint.config.js
+
+import react from 'eslint-plugin-react'
+
+
+
+export default tseslint.config({
+
+  // Set the react version
+
+  settings: { react: { version: '18.3' } },
+
+  plugins: {
+
+    // Add the react plugin
+
+    react,
+
+  },
+
+  rules: {
+
+    // other rules...
+
+    // Enable its recommended rules
+
+    ...react.configs.recommended.rules,
+
+    ...react.configs['jsx-runtime'].rules,
+
+  },
+
+})
+
+```
