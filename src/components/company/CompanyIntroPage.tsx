@@ -266,7 +266,7 @@ export function CompanyIntroPage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 1 }}
             className="px-6 py-3 border border-white text-white rounded-full hover:bg-white hover:text-teal-500 transition duration-300"
-            onClick={() => navigate("/contact")}
+            onClick={() => navigate("/admin")}
           >
             지금 참여하기
           </motion.button>
