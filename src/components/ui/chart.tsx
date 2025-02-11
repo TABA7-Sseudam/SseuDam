@@ -8,7 +8,7 @@ export interface ChartConfig {
   };
 }
 
-export function ChartContainer({ config, children }: { config: ChartConfig; children: React.ReactNode }) {
+export function ChartContainer({ children }: { config?: ChartConfig; children: React.ReactNode }) {
   return (
     <div style={{ width: "100%", height: 300 }}>
       {children}

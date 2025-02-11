@@ -40,6 +40,8 @@ export function SettingsPage() {
           </div>
         </Card>
 
+       
+
         {/* 🔔 알림 설정 버튼 */}
         <Card className="p-6 flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -52,6 +54,8 @@ export function SettingsPage() {
           <Button variant="outline" onClick={() => setShowNotificationSettings(true)}>설정</Button>
         </Card>
 
+        
+
         {/* 📦 데이터 관리 */}
         <Card className="p-6 flex items-center justify-between cursor-pointer" onClick={() => navigate("/settings/data")}>
           <div className="flex items-center space-x-4">
@@ -62,6 +66,8 @@ export function SettingsPage() {
             </div>
           </div>
         </Card>
+
+       
 
         {/* 🚪 로그아웃 */}
         <Card className="p-6 flex items-center justify-between">

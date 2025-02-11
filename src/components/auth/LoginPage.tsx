@@ -1,69 +1,150 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
+import { 
+  loginUser, 
+  getUserData,
+  logUserActivity
+} from "@/services/authService";
+
+interface FirebaseError extends Error {
+  code?: string;
+}
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError("이메일과 비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    
     try {
-      // Firebase Authentication을 통한 로그인
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const user = await loginUser(email, password);
+      
+      const userData = await getUserData(user.uid);
+      if (userData) {
+        const userInfo = {
+          ...userData,
+          uid: user.uid,
+          lastLogin: new Date().toISOString()
+        };
 
-      // Firestore에서 추가 사용자 정보 가져오기
-      const userDocRef = doc(db, "users", user.uid);
-      const userDoc = await getDoc(userDocRef);
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        console.log("✅ 사용자 정보:", userData);
-
-        // 로컬스토리지에 사용자 정보 저장
-        localStorage.setItem("user", JSON.stringify({ uid: user.uid, ...userData }));
-
-        // 로그인 성공 시 홈 페이지로 이동
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        await logUserActivity(user.uid, 'login');
         navigate("/home");
-      } else {
-        console.error("❌ 사용자 정보를 찾을 수 없습니다.");
-        setError("사용자 정보를 찾을 수 없습니다.");
       }
     } catch (error) {
-      console.error("❌ 로그인 실패:", error);
-      setError("로그인 실패. 이메일과 비밀번호를 확인하세요.");
+      console.error("로그인 에러:", error);
+      const firebaseError = error as FirebaseError;
+      setError(firebaseError.message || "로그인 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handleGuestLogin = () => {
+    const guestData = {
+      uid: `guest-${Date.now()}`,
+      email: null,
+      username: "게스트",
+      lastLogin: new Date().toISOString(),
+      isGuest: true,
+      points: 0,
+      recycleCount: 0,
+      role: 'user'
+    };
+    localStorage.setItem("user", JSON.stringify(guestData));
+    navigate("/home");
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
-      <h2 className="text-3xl font-bold mb-4">로그인</h2>
-      <Card className="p-6 w-full max-w-md">
-        <input
-          type="email"
-          placeholder="이메일 입력"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
-        />
-        <input
-          type="password"
-          placeholder="비밀번호 입력"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
-        />
-        <Button className="w-full bg-black text-white" onClick={handleLogin}>
-          로그인
-        </Button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-      </Card>
-    </div>
+    <Card className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="px-8 py-6">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">로그인</h2>
+          <p className="mt-2 text-sm text-gray-600">계정에 로그인하세요</p>
+        </div>
+
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">이메일</label>
+            <input
+              type="email"
+              placeholder="이메일을 입력하세요"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">비밀번호</label>
+            <input
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full h-10 flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700"
+            disabled={isLoading}
+          >
+            {isLoading && <Loader2 className="animate-spin mr-2" />}
+            {isLoading ? "처리 중..." : "로그인"}
+          </Button>
+        </form>
+
+        <div className="mt-6">
+          <Button
+            type="button"
+            onClick={handleGuestLogin}
+            className="w-full h-10 bg-gray-600 text-white hover:bg-gray-700"
+            disabled={isLoading}
+          >
+            게스트로 체험하기
+          </Button>
+        </div>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            계정이 없으신가요?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
+              회원가입
+            </button>
+          </p>
+        </div>
+      </div>
+    </Card>
   );
 }
+
+export default LoginPage;

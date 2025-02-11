@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import HomePage from "@/components/auth/HomePage";
 import { AuthPage } from "@/components/auth/AuthPage";
 import { WasteAnalysisPage } from "./components/analysis/WasteAnalysisPage";
@@ -8,34 +9,138 @@ import { Header } from "@/components/shared/Header";
 import { Ranking } from "@/components/ranking/Ranking"
 import { GuidePage } from "./components/guide/GuidePage";
 import { AccountSettingsPage } from './components/settings/AccountSettingsPage';
+import { CompanyIntroPage } from '@/components/company/CompanyIntroPage';
+
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+
+// 보호된 라우트 컴포넌트
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowGuest?: boolean;
+}
+
+function ProtectedRoute({ children, allowGuest = false }: ProtectedRouteProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const userData = JSON.parse(user);
+      setIsGuest(userData.isGuest || false);
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (isGuest && !allowGuest) {
+    return <Navigate to="/guide" replace />;
+  }
+
+  return <>{children}</>;
+}
 
 function App() {
+  const [showHeader, setShowHeader] = useState(true);
+
+  // 현재 경로가 /auth 또는 /인지 확인하여 헤더 표시 여부 결정
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const currentPath = window.location.pathname;
+      setShowHeader(currentPath !== '/auth' && currentPath !== '/');
+    };
+
+    handleRouteChange(); // 초기 실행
+    window.addEventListener('popstate', handleRouteChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        {/* ✅ 모든 페이지에서 상단 메뉴바(Header)를 유지 */}
-        <Header />
-
-        {/* ✅ 페이지 라우팅 */}
+        {showHeader && <Header />}
         <main className="flex-grow">
           <Routes>
-            {/* ✅ 앱 실행 시 로그인 페이지(`/auth`)로 이동 */}
-            <Route path="/" element={<Navigate to="/auth" replace />} />
-            {/* ✅ 로그인/회원가입 페이지 */}
+            {/* 회사 소개 페이지 */}
+            <Route path="/" element={<CompanyIntroPage />} />
+            
+            {/* 공개 라우트 */}
             <Route path="/auth" element={<AuthPage />} />
-            {/* ✅ 로그인 후 접근 가능한 메인 페이지 */}
-            <Route path="/home" element={<HomePage />} />
-            {/* ✅ 분리배출 분석 페이지 */}
-            <Route path="/waste-analysis" element={<WasteAnalysisPage />} />
-            {/* ✅ 리워드 페이지 */}
-            <Route path="/rewards" element={<Rewards />} />
-            {/* ✅ 가이드 페이지 */}
-            <Route path="/guide" element={<GuidePage />} />
-            {/* ✅ 설정 페이지 */}
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/settings/account" element={<AccountSettingsPage />} />
-            {/* ✅ 랭킹 라우트 추가 */}
-            <Route path="/ranking" element={<Ranking />} />
+            
+            {/* 게스트도 접근 가능한 라우트 */}
+            <Route 
+              path="/guide" 
+              element={
+                <ProtectedRoute allowGuest>
+                  <GuidePage />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* 로그인 사용자만 접근 가능한 라우트 */}
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/waste-analysis"
+              element={
+                <ProtectedRoute>
+                  <WasteAnalysisPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rewards"
+              element={
+                <ProtectedRoute>
+                  <Rewards />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings/account"
+              element={
+                <ProtectedRoute>
+                  <AccountSettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ranking"
+              element={
+                <ProtectedRoute>
+                  <Ranking />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
       </div>

@@ -1,12 +1,16 @@
+// src/components/auth/HomePage.tsx
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Header } from "@/components/shared/Header";
 import { UserProfile } from "@/components/profile/UserProfile";
 import { RecyclingStats } from "@/components/dashboard/RecyclingStats";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-function HomePage() {
+interface UserData {
+  isGuest?: boolean;
+}
+
+export default function HomePage() {  // 여기서 export default 사용
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [isGuest, setIsGuest] = useState(false);
@@ -17,8 +21,8 @@ function HomePage() {
     if (!user) {
       navigate("/auth"); 
     } else {
-      const parsedUser = JSON.parse(user);
-      if (parsedUser === "guest") {
+      const parsedUser: UserData = JSON.parse(user);
+      if (parsedUser.isGuest) {
         setIsGuest(true);
         setIsLoggedIn(false);
       } else {
@@ -53,40 +57,38 @@ function HomePage() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <Header />
-      <main className="container mx-auto px-4 py-8 flex-grow">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-          {isGuest && (
-            <div className="text-center text-gray-600 bg-gray-100 p-4 rounded-md mb-6">
-              <p>🔹 현재 <b>게스트 계정</b>으로 접속 중입니다.</p>
-              <p>🚀 더 많은 기능을 사용하려면 회원가입하세요!</p>
-            </div>
-          )}
-
-          {isLoggedIn && (
-            <>
-              <section className="mb-12">
-                <UserProfile />
-              </section>
-              <section className="mb-12">
-                <RecyclingStats />
-              </section>
-            </>
-          )}
-        </motion.div>
-        <Button className="bg-red-500 text-white mt-4" onClick={handleLogout}>
-          로그아웃
-        </Button>
-      </main>
-
-      <footer className="border-t py-6">
-        <div className="container mx-auto px-4 text-center text-sm text-gray-500">
-          Copyright © 2025 분리배출 AI 시스템. All Rights Reserved.
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      transition={{ duration: 0.5 }}
+      className="container mx-auto px-4 py-6"
+    >
+      {isGuest && (
+        <div className="text-center text-gray-600 bg-gray-100 p-4 rounded-md mb-6">
+          <p>🔹 현재 <b>게스트 계정</b>으로 접속 중입니다.</p>
+          <p>🚀 더 많은 기능을 사용하려면 회원가입하세요!</p>
         </div>
-      </footer>
-    </div>
+      )}
+
+      {isLoggedIn && (
+        <>
+          <section className="mb-12">
+            <UserProfile />
+          </section>
+          <section className="mb-12">
+            <RecyclingStats />
+          </section>
+        </>
+      )}
+
+      <div className="text-center">
+        <Button 
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white"
+        >
+          {isGuest ? "게스트 모드 종료" : "로그아웃"}
+        </Button>
+      </div>
+    </motion.div>
   );
 }
-
-export default HomePage;
