@@ -30,7 +30,7 @@ export function Header() {
         <Button variant="ghost" onClick={() => navigate("/home")}>홈</Button>
         <Button variant="ghost" onClick={() => navigate("/waste-analysis")}>분리배출</Button>
         <Button variant="ghost" onClick={() => navigate("/ranking")}>랭킹</Button>
-        <Button variant="ghost" onClick={() => navigate("/rewards")}>리워드</Button>
+        <Button variant="ghost" onClick={() => navigate("/rewards")}>게시판</Button>
         <Button variant="ghost" onClick={() => navigate("/guide")}>가이드</Button>
         <Button variant="ghost" onClick={() => navigate("/settings")}>설정</Button>
       </nav>

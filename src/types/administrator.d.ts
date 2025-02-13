@@ -12,3 +12,5 @@ export interface BinStatus {
   type: string         // 분리수거 항목 (플라스틱, 금속 등)
   fillLevel: number    // 채움 정도 (0 ~ 100%)
 }
+
+

@@ -1,116 +1,92 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { FaCoins, FaTicketAlt } from "react-icons/fa"; // 아이콘 추가
+import "bootstrap/dist/css/bootstrap.min.css"
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 
-export function Rewards() {
+export default function Rewards() {
+  const [currentPage, setCurrentPage] = useState(1)
+
   useEffect(() => {
-    import("bootstrap");
-  }, []);
+    console.log("Rewards 컴포넌트가 마운트되었습니다.")
+  }, [])
+
+  const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1))
+  const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, 5))
 
   return (
-    <div className="container mt-4">
-      {/* ✅ 슬라이드 배너 */}
-      <div id="carouselExampleInterval" className="carousel slide" data-bs-ride="carousel">
-        <div className="carousel-inner">
-          <div className="carousel-item active" data-bs-interval="3000">
-            <img
-              src="/slide1.jpg"
-              className="d-block w-100"
-              alt="Slide 1"
-              style={{ height: "40vh", objectFit: "cover" }}
-            />
-          </div>
-          <div className="carousel-item" data-bs-interval="3000">
-            <img
-              src="/slide2.jpg"
-              className="d-block w-100"
-              alt="Slide 2"
-              style={{ height: "40vh", objectFit: "cover" }}
-            />
-          </div>
-          <div className="carousel-item">
-            <img
-              src="/slide3.jpg"
-              className="d-block w-100"
-              alt="Slide 3"
-              style={{ height: "40vh", objectFit: "cover" }}
-            />
-          </div>
-        </div>
-        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-        </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-        </button>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* 사이드바 */}
+      <div className="w-64 bg-white shadow-md flex flex-col border-r">
+        <h2 className="p-4 text-xl font-bold border-b bg-gray-100">게시판</h2>
+        <nav className="flex flex-col p-4 space-y-4">
+          {["이용방법", "최근 소식", "법령 및 규정"].map((item) => (
+            <a href="#" key={item} className="text-gray-700 hover:text-blue-600 transition font-medium no-underline">
+              {item}
+            </a>
+          ))}
+        </nav>
       </div>
 
-      {/* ✅ 사용자 프로필 섹션 */}
-      <div className="d-flex justify-content-between align-items-center bg-white p-4 rounded-lg shadow-lg border mt-5">
-        {/* 사용자 정보 */}
-        <div className="d-flex align-items-center gap-3">
-          <div className="rounded-circle bg-secondary" style={{ width: "80px", height: "80px" }}></div>
-          <div>
-            <h2 className="h5 fw-bold">사용자이름</h2>
-            <p className="text-muted m-0">누적 포인트: XX | 현재 등급: XXpoint | 🗑 분리배출 견습생</p>
-            <p className="text-muted m-0">누적된 포인트를 확인하고 보상을 받아가세요!</p>
+      {/* 메인 콘텐츠 */}
+      <div className="flex-1 p-8 bg-white flex flex-col justify-between">
+        <div>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">공지사항</h2>
+          {/* 검색 영역 */}
+          <div className="flex items-center space-x-3 mb-6 bg-gray-100 p-4 rounded-lg shadow-sm">
+            <select className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-400">
+              <option>구분선택</option>
+              <option>일반</option>
+              <option>법령</option>
+            </select>
+            <input type="text" placeholder="검색어를 입력하세요" className="border p-2 flex-1 rounded focus:ring-2 focus:ring-blue-400" />
+            <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">검색</button>
           </div>
+
+          {/* 공지사항 리스트 */}
+          <table className="w-full border-collapse border-t text-left text-gray-700 shadow-sm">
+            <thead className="bg-gray-100">
+              <tr className="border-b">
+                <th className="p-3 w-16">번호</th>
+                <th className="p-3 w-20">분류</th>
+                <th className="p-3">제목</th>
+                <th className="p-3 w-32">등록일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { id: '01', classification: '일반', title: '개인정보 처리방침 변경 안내', date: '2024-02-05' },
+                { id: '02', classification: '법령', title: '법령 변경 사항 안내', date: '2024-02-05' },
+                { id: '03', classification: '일반', title: '앱 버전', date: '2024-02-05' },
+              ].map((item, index) => (
+                <tr key={index} className="border-b hover:bg-gray-50 transition">
+                  <td className="p-3 text-gray-500">{item.id}</td>
+                  <td className="p-3">{item.classification}</td>
+                  <td className="p-3 text-blue-600 hover:underline cursor-pointer">{item.title}</td>
+                  <td className="p-3 text-gray-500">{item.date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* ✅ 버튼 (동작 없음) */}
-        <div className="d-flex gap-3">
-          <Button variant="outline">포인트 내역</Button>
-          <Button className="bg-black text-white">상점으로 이동</Button>
+        {/* 페이지네이션 */}
+        <div className="flex justify-center mt-6 p-4 bg-gray-50 rounded-t-lg shadow-inner">
+          <Button onClick={handlePrevPage} disabled={currentPage === 1} className="mx-2 bg-black text-white hover:bg-gray-800">
+            이전
+          </Button>
+          {[1, 2, 3, 4, 5].map((page) => (
+            <Button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`mx-1 px-4 py-2 ${currentPage === page ? "bg-black text-white" : "bg-white border border-black text-black hover:bg-gray-100"}`}
+            >
+              {page}
+            </Button>
+          ))}
+          <Button onClick={handleNextPage} disabled={currentPage === 5} className="mx-2 bg-black text-white hover:bg-gray-800">
+            다음
+          </Button>
         </div>
       </div>
-
-      {/* ✅ 포인트 및 쿠폰 카드 (흰색 배경, 내부 색상 유지) */}
-      <div className="mt-4 p-4 bg-white rounded-lg shadow-lg border">
-        <div className="row g-3">
-          {/* 보유 포인트 */}
-          <div className="col-md-6">
-            <div className="p-4 rounded-3 border bg-light d-flex flex-column"> {/* ✨ 내부 배경색 유지, 부모 카드만 흰색 */}
-              <div className="d-flex align-items-center gap-2">
-                <FaCoins size={22} className="text-warning" />
-                <h5 className="mb-0 fw-bold">보유 포인트</h5>
-              </div>
-              <h1 className="fw-bold mt-2 text-orange">900 <span className="fs-4 text-dark">포인트</span></h1>
-            </div>
-          </div>
-
-          {/* 보유 쿠폰 */}
-          <div className="col-md-6">
-            <div className="p-4 rounded-3 border bg-light d-flex flex-column"> {/* ✨ 내부 배경색 유지, 부모 카드만 흰색 */}
-              <div className="d-flex align-items-center gap-2">
-                <FaTicketAlt size={22} className="text-danger" />
-                <h5 className="mb-0 fw-bold">보유 쿠폰</h5>
-              </div>
-              <h1 className="fw-bold mt-2 text-orange">2 <span className="fs-4 text-dark">장</span></h1>
-            </div>
-          </div>
-
-          {/* 개별 쿠폰 정보 */}
-          <div className="col-12">
-            <div className="p-3 rounded-3 border bg-light d-flex align-items-center"> {/* ✨ 내부 배경색 유지, 부모 카드만 흰색 */}
-              <FaTicketAlt size={20} className="text-danger me-2" />
-              <div>
-                <h6 className="fw-bold mb-0">🎉 신규가입 쿠폰</h6>
-                <small className="text-muted">종량제 봉투 5L 10매</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ✅ 포인트 사용 버튼 (하단 고정) */}
-      {/* <div className="mt-4"> */}
-        {/* <Button className="w-100 py-3 text-white fs-5 fw-bold bg-black"> */}
-          {/* 상점으로 이동 */}
-        {/* </Button> */}
-      {/* </div> */}
     </div>
-  );
+  )
 }
