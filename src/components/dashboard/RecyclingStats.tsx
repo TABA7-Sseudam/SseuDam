@@ -1,33 +1,82 @@
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { motion, AnimatePresence } from "framer-motion"
+
+const cardData = [
+  { date: "2월 13일", success: "90%", material: "플라스틱" },
+  { date: "최근", success: "80%", material: "종이" },
+  { date: "2월 15일", success: "70%", material: "유리" },
+]
+
 export function RecyclingStats() {
-    return (
-      <section>
-        <h2 className="text-3xl font-bold mb-2">최근 분리배출 기록</h2>
-        <p className="text-gray-600 mb-8">성공률 차트 및 배출 횟수</p>
-  
-        {/* 분리배출 정보와 차트 영역 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 왼쪽: 분리배출 정보 */}
-          <div className="rounded-lg border p-6 bg-white shadow-md">
-            <div className="flex gap-6 mb-4">
-              <div className="w-24 h-24 bg-gray-200 rounded"></div>
-              <div>
-                <h3 className="text-lg font-semibold">분리배출 성공률</h3>
-                <p className="text-3xl font-bold mb-2">90%</p>
-                <p className="text-gray-600 text-sm bg-gray-100 px-2 py-1 rounded inline-block">
-                  가장 잘 분리배출한 재질: 플라스틱
-                </p>
-              </div>
+  const [current, setCurrent] = useState(0)
+
+  const nextCard = () => setCurrent((prev) => (prev + 1) % cardData.length)
+  const prevCard = () => setCurrent((prev) => (prev - 1 + cardData.length) % cardData.length)
+  const getIndex = (index: number) => (index + cardData.length) % cardData.length
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-8 relative">
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">♻️ 분리배출 기록</h1>
+
+      {/* 버튼: 카드 섹션 바깥 중앙 1/3 위치 */}
+      <Button 
+        onClick={prevCard} 
+        className="absolute left-[calc(34%-480px)] top-1/2 transform -translate-x-full -translate-y-1/2 bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-black transition">
+        ←
+      </Button>
+      <Button 
+        onClick={nextCard} 
+        className="absolute right-[calc(34%-480px)] top-1/2 transform translate-x-full -translate-y-1/2 bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-black transition">
+        →
+      </Button>
+
+      {/* 카드 섹션 1/3 위치로 올림 */}
+      <div className="relative w-[1200px] h-[1200px] top-1/2 flex items-center justify-center overflow-hidden h-auto">
+        <AnimatePresence mode="wait">
+          {/* 왼쪽 미리보기 */}
+          <motion.div
+            key={`prev-${getIndex(current - 1)}`}
+            initial={{ scale: 0.8, x: "-150%" }}
+            animate={{ scale: 0.9, x: "-120%" }}
+            exit={{ scale: 0.8, x: "-150%" }}
+            transition={{ duration: 0.5 }}
+            className="absolute bg-gray-100 shadow-md rounded-lg p-4 w-[400px] h-[300px] border opacity-70"
+          >
+            <h2 className="text-2xl font-semibold text-gray-500">{cardData[getIndex(current - 1)].date} 기록</h2>
+          </motion.div>
+
+          {/* 메인 카드 */}
+          <motion.div
+            key={`current-${current}`}
+            initial={{ scale: 0.8, x: 0 }}
+            animate={{ scale: 1, x: 0 }}
+            exit={{ scale: 0.8, x: "-100%" }}
+            transition={{ duration: 0.6 }}
+            className="z-10 bg-white shadow-xl rounded-xl p-8 border w-[700px] h-[500px]"
+          >
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{cardData[current].date} 분리배출 기록</h2>
+            <p className="text-gray-500 mb-6 text-lg">성공률 차트 및 배출 횟수</p>
+            <div className="bg-gray-100 p-6 rounded-lg">
+              <h3 className="text-xl font-bold text-gray-800 mb-2">분리배출 성공률</h3>
+              <p className="text-4xl font-bold text-green-600 mb-4">{cardData[current].success}</p>
+              <p className="text-md text-gray-500">가장 잘 분리배출한 재질: {cardData[current].material}</p>
             </div>
-            <div className="flex items-center gap-2 mt-4">
-              <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
-              <span className="text-gray-600 text-sm">AI 분석 결과</span>
-            </div>
-          </div>
-  
-          {/* 오른쪽: 차트 영역 */}
-          <div className="bg-gray-200 rounded-lg aspect-square"></div>
-        </div>
-      </section>
-    );
-  }
-  
+          </motion.div>
+
+          {/* 오른쪽 미리보기 */}
+          <motion.div
+            key={`next-${getIndex(current + 1)}`}
+            initial={{ scale: 0.8, x: "150%" }}
+            animate={{ scale: 0.9, x: "120%" }}
+            exit={{ scale: 0.8, x: "150%" }}
+            transition={{ duration: 0.5 }}
+            className="absolute bg-gray-100 shadow-md rounded-lg p-4 w-[400px] h-[300px] border opacity-70"
+          >
+            <h2 className="text-2xl font-semibold text-gray-500">{cardData[getIndex(current + 1)].date} 기록</h2>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
