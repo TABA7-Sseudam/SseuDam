@@ -1,45 +1,28 @@
-HELP.md
-.gradle
+### 🛠 빌드 관련 파일 제외 ###
 build/
-!gradle/wrapper/gradle-wrapper.jar
+bin/
+out/
 !**/src/main/**/build/
-!**/src/test/**/build/
+!**/src/main/**/bin/
+!**/src/main/**/out/
 
-### STS ###
-.apt_generated
+### ⚙️ IDE 설정 파일 제외 ###
+.idea/
+.vscode/
 .classpath
 .factorypath
 .project
 .settings
 .springBeans
 .sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-node_modules/
-dist/
+### 🖥️ OS에서 생성되는 불필요한 파일 제외 ###
 .DS_Store
-ai_server/venv/
-ai_server/models/last.pt
-src/main/resources/
+
+### 🚀 프론트엔드 관련 파일 제외 ###
+src/main/frontend/
+
+### 🤖 AI 서버 관련 파일 제외 ###
+ai_server/
 ai_server/venv/
 ai_server/models/last.pt
