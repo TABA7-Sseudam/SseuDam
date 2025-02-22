@@ -1,11 +1,15 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+### 🔥 불필요한 파일/폴더 무시 (백엔드 전용) ###
 
-### STS ###
+# Gradle 관련
+.gradle/
+build/
+bin/
+out/
+!**/src/main/**/build/
+!**/src/main/**/bin/
+!**/src/main/**/out/
+
+# IDE 설정 파일 (STS, IntelliJ, NetBeans, VS Code)
 .apt_generated
 .classpath
 .factorypath
@@ -13,34 +17,31 @@ build/
 .settings
 .springBeans
 .sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+.vscode/
+.DS_Store
 
-### NetBeans ###
+# Node.js 관련 (프론트엔드)
+node_modules/
+dist/
+src/main/frontend/
+
+# AI 서버 관련
+ai_server/
+ai_server/venv/
+ai_server/models/
+ai_server/utils/__pycache__/
+
+# NetBeans 관련
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
-node_modules/
-dist/
-.DS_Store
-ai_server/venv/
-ai_server/models/last.pt
-src/main/resources/
-ai_server/venv/
-ai_server/models/last.pt
-ai_server/
+# Python 캐시 파일
+__pycache__/
+*.pyc
