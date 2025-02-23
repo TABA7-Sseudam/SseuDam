@@ -9,7 +9,8 @@ import { Header } from "@/components/shared/Header";
 import { Ranking } from "@/components/ranking/Ranking"
 import { GuidePage } from "./components/guide/GuidePage";
 import { AccountSettingsPage } from './components/settings/AccountSettingsPage';
-import { CompanyIntroPage } from '@/components/company/CompanyIntroPage';
+import { CompanyIntroPage } from "@/components/company/CompanyIntroPage";
+
 import RankTierGuide from "@/components/ranking/Rank_Tier_Guide"; // 랭킹 & 등급 가이드 페이지 추가
 // ✅ 관리자 페이지 컴포넌트 임포트 추가
 import { Administrator } from './components/administrator/Administrator'

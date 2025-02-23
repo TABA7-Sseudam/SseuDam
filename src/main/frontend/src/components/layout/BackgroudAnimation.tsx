@@ -15,7 +15,7 @@ const BackgroundAnimation = () => {
     }}
     >
       {/* ☁️ 구름 애니메이션 */}
-      {[1, 2, 3].map((cloud) => (
+      {[1, 2, 3].map((cloud) => ( 
         <motion.img
           key={cloud}
           src={CLOUD_IMAGE}

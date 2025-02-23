@@ -1,202 +1,338 @@
 import { useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
+import { FaGithub } from "react-icons/fa"
+import { FaTree, FaPencilAlt } from "react-icons/fa"
+import { Divide } from "lucide-react"
 
 export function CompanyIntroPage() {
   const navigate = useNavigate()
   const sectionsRef = useRef<(HTMLElement | null)[]>([])
-
+  
   const scrollToSection = (index: number) => {
     sectionsRef.current[index]?.scrollIntoView({ behavior: "smooth" })
   }
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden relative font-sans text-gray-900">
-      {/* 🛠️ 네비게이션 바 */}
-      <nav className="fixed top-0 left-0 w-full bg-white text-black flex items-center justify-between px-8 py-4 z-50 border-b border-gray-300 shadow-sm">
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-4 px-4 py-2 rounded-full">
-          <button
-            onClick={() => scrollToSection(0)}
-            className="text-gray-900 font-serif text-2xl tracking-wide hover:text-teal-600 transition-colors duration-300"
-          >
-            Ssuedam 🌿
-          </button>
-        </div>
-        <div className="flex items-center space-x-4 text-black text-sm font-medium absolute right-8 top-4">
-          <button
-            onClick={() => navigate("/auth")}
-            className="hover:text-teal-600 transition-colors duration-300"
-          >
+    <div className="relative min-h-screen font-[Cafe24Surround] text-gray-900 overflow-hidden">
+      {/* 전체 페이지 배경 */}
+      <div
+        className="background-container fixed top-0 left-0 w-full h-full pointer-events-none z-0"
+        style={{
+          background: "linear-gradient(to bottom, rgba(217, 234, 244, 0.9), rgba(251, 248, 239, 0.9))",
+          backdropFilter: "blur(3px)"
+        }}
+      ></div>
+
+      {/* 네비게이션 바 */}
+      <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md text-black flex items-center justify-between px-6 py-3 z-50 border-b border-gray-300 shadow-sm transition-all">
+        <button
+          onClick={() => scrollToSection(0)}
+          className="text-gray-900 font-serif text-2xl tracking-wide hover:text-teal-600 transition-colors duration-300 flex items-center space-x-2"
+        >
+          <span>🌿</span>
+          <span className="font-bold">Verda</span>
+        </button>
+        <div className="flex items-center space-x-3 text-black text-sm font-medium">
+          <button onClick={() => navigate("/auth")} className="hover:text-teal-600 transition-colors duration-300">
             회원가입
           </button>
           <span className="text-gray-400">|</span>
-          <button
-            onClick={() => navigate("/auth")}
-            className="hover:text-teal-600 transition-colors duration-300"
-          >
+          <button onClick={() => navigate("/auth")} className="hover:text-teal-600 transition-colors duration-300">
             로그인
           </button>
         </div>
       </nav>
 
-      {/* 🎬 동영상 섹션 */}
+                <section className="relative h-100">
+
+            <div className="absolute inset-0 bg-gray-200 z-0"></div>
+            
+
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-20 z-10 text-center">
+              <h2 className="text-black font-bold md:text-4xl mb-2 text-3xl">
+                AI 기반 스마트 분리배출
+              </h2>
+              <p className="text-black font-bold md:text-xl text-xl">
+                올바르게 버리고, 가치 있게 돌려받자!
+              </p>
+            </div>
+          </section>
+
+         
+
+      {/* 동영상 섹션 */}
       <section
         ref={(el) => (sectionsRef.current[0] = el)}
-        className="w-full h-[650px] relative overflow-hidden mt-30 mx-auto"
+        className="relative w-[80vw] max-w-[1000px] aspect-[16/9] overflow-hidden mt-40 mx-auto rounded-3xl shadow-2xl"
       >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover m-auto rounded-2xl"
-        >
-          <source src="/Intro/movie7.mp4" type="video/mp4" />
+        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover m-auto rounded-3xl">
+          <source src="/Intro/movie10.mp4" type="video/mp4" />
           브라우저가 비디오 태그를 지원하지 않습니다.
         </video>
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center text-white">
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
+
+        {/* 텍스트 컨테이너 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20 flex flex-col items-center justify-center text-center text-white px-6">
+          <motion.h1 
+            initial={{ opacity: 0, y: 50 }} 
+            animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 1 }}
-            className="text-5xl font-serif mb-4"
+            className="text-4xl font-[Cafe24Surround] mb-4 text-white drop-shadow-lg"
           >
-            AI 기반 스마트 분리배출
+           
           </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
             transition={{ delay: 0.5, duration: 1 }}
-            className="text-2xl text-gray-300 mb-8"
-          >
-            올바르게 버리고, 가치 있게 돌려받자!
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 1 }}
-          >
-            <Button
-              onClick={() => navigate("/auth")}
-              className="px-6 py-3 bg-gradient-to-r from-gray-200 to-gray-400 text-gray-900 rounded-full shadow-lg hover:from-gray-300 hover:to-gray-500 transition-all font-semibold"
-            >
-               지금 시작하기
-            </Button>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute bottom-10 flex flex-col items-center cursor-pointer"
-            onClick={() => scrollToSection(1)}
-          >
-            <p className="text-white text-sm mb-2">아래로 스크롤하세요</p>
-            <svg
-              className="w-6 h-6 text-teal-300 animate-bounce"
-             
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 🖼️ 브랜드 스토리 섹션 */}
-      <section className="relative bg-white py-20 px-12"
-      ref={(el) => (sectionsRef.current[1] = el)}>
-        <div className="absolute left-0 top-0 w-4/5 h-full bg-gradient-to-br from-gray-100 to-white rounded-r-full z-0" />
-        <h2 className="relative z-10 text-3xl font-serif font-bold mb-6 translate-x-12 translate-y-12">
-          "Our Mission: A Cleaner Tomorrow."
-        </h2>
-        <h2 className="relative z-10 text-2xl font-light mb-6 translate-x-12 translate-y-12">
-          지속 가능한 지구를 위한 우리의 이야기.
-        </h2>
-
-        <div className="flex">
-          {/* 🌱 좌측 세로 텍스트 */}
-          <div className="relative w-1/3 flex items-center justify-center">
-            <img
-              src="/Intro/robot.png"
-              alt="브랜드 이미지"
-              className="absolute w-[380px] h-[380px] object-cover opacity-20 pointer-events-none"
-            />
-            <span className="text-5xl text-gray-800 font-extrabold transform -rotate-90">
           
-            </span>
-          </div>
+          >
+          
+          </motion.p>
+        </div>
+      </section>
 
-          {/* 📷 우측 2x2 이미지와 텍스트 */}
-          <div className="grid grid-cols-2 gap-2 relative z-12 w-3/4 transform pl-40">
-            {[
-              { src: "/Intro/intro11.jpg", title: "AI와 함께하는 올바른 분리수거", desc: "버릴 때마다 배우는 올바른 습관" },
-              { src: "/Intro/intro12.jpg", title: "분리배출, 이제 손 안에서 스마트하게", desc: "AI 분석 데이터 실시간 확인 가능" },
-              { src: "/Intro/intro10.jpg", title: "정확한 분리수거 AI가 도와줍니다", desc: "올바른 분리수거 시 초록불로 즉시 확인" },
-              { src: "/Intro/intro13.jpg", title: "재활용의 가치를, 가이드로 쉽고 즐겁게", desc: "친환경 가이드와 함께하는 분리배출" }
-            ].map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center text-center mt-2 ml-6">
-                <img
-                  src={item.src}
-                  alt={item.title}
-                  className="w-[290px] h-[380px] object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
-                />
-                <h3 className="mt-4 text-xl font-semibold">{item.title}</h3>
-                <p className="text-gray-600 text-sm mt-2">{item.desc}</p>
-              </div>
-            ))}
+      {/* 브랜드 스토리 섹션 */}
+      <section ref={(el) => (sectionsRef.current[1] = el)} className="relative py-20 px-12 text-center">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-24"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 mt-5s0">
+              이렇게 시작해보세요
+            </h2>
+            <p className="text-xl text-gray-600">
+              쉽고 간단한 5단계로 시작하는 분리수거
+            </p>
+          </motion.div>
+
+          <div className="relative">
+            {/* Connecting Lines */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200/50 hidden md:block" />
+            
+            {/* Steps */}
+            <div className="space-y-40">
+              {/* Step 1 */}
+              <motion.div 
+                className="flex justify-start md:translate-x-[-100px]"
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex gap-12 items-center bg-[rgba(217,234,244,0.6)] rounded-2xl p-10 max-w-2xl shadow-lg ">
+                  <div className="flex-1">
+                    <div className="text-blue-600 font-medium mb-2 text-xl">STEP 1</div>
+                    <h3 className="text-2xl font-bold mb-3">분리수거 시작하기</h3>
+                    <p className="text-gray-600 text-lg">집 앞 분리수거장에서 시작해보세요</p>
+                  </div>
+                  <div className="relative w-48 h-48 overflow-hidden rounded-xl">
+                    <img 
+                      src="/Intro/intro21.png"
+                      alt="분리수거 시작하기" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Step 2 */}
+              <motion.div 
+                className="flex justify-end md:translate-x-[100px]"
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex gap-12 items-center bg-[rgba(234,244,239,0.6)] rounded-2xl p-10 max-w-2xl shadow-lg">
+                  <div className="flex-1">
+                    <div className="text-green-600 font-medium mb-2 text-xl">STEP 2</div>
+                    <h3 className="text-2xl font-bold mb-3">사진 촬영하기</h3>
+                    <p className="text-gray-600 text-lg">분리수거 품목을 촬영해주세요</p>
+                  </div>
+                  <div className="relative w-48 h-48 overflow-hidden rounded-xl">
+                    <img 
+                      src="/Intro/intro22.png"
+                      alt="사진 촬영하기" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Step 3 */}
+              <motion.div 
+                className="flex justify-start md:translate-x-[-100px]"
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex gap-12 items-center bg-[rgba(244,239,234,0.6)] rounded-2xl p-10 max-w-2xl shadow-lg">
+                  <div className="flex-1">
+                    <div className="text-yellow-600 font-medium mb-2 text-xl">STEP 3</div>
+                    <h3 className="text-2xl font-bold mb-3">AI 분석 시작</h3>
+                    <p className="text-gray-600 text-lg">정확한 분리수거 방법을 알려드려요</p>
+                  </div>
+                  <div className="relative w-48 h-48 overflow-hidden rounded-xl">
+                    <img 
+                      src="/Intro/intro25.png"
+                      alt="AI 분석 시작" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Step 4 */}
+              <motion.div 
+                className="flex justify-end md:translate-x-[100px]"
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex gap-12 items-center bg-[rgba(239,234,244,0.6)] rounded-2xl p-10 max-w-2xl shadow-lg">
+                  <div className="flex-1">
+                    <div className="text-purple-600 font-medium mb-2 text-xl">STEP 4</div>
+                    <h3 className="text-2xl font-bold mb-3">결과 확인하기</h3>
+                    <p className="text-gray-600 text-lg">올바른 분리수거 방법을 실천해보세요</p>
+                  </div>
+                  <div className="relative w-48 h-48 overflow-hidden rounded-xl">
+                    <img 
+                      src="/Intro/intro23.png"
+                      alt="결과 확인하기" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Step 5 */}
+              <motion.div 
+                className="flex justify-start md:translate-x-[-100px]"
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex gap-12 items-center bg-[rgba(234,244,244,0.6)] rounded-2xl p-10 max-w-2xl shadow-lg">
+                  <div className="flex-1">
+                    <div className="text-teal-600 font-medium mb-2 text-xl">STEP 5</div>
+                    <h3 className="text-2xl font-bold mb-3">포인트 적립하기</h3>
+                    <p className="text-gray-600 text-lg">올바른 분리수거로 포인트를 모아보세요</p>
+                  </div>
+                  <div className="relative w-48 h-48 overflow-hidden rounded-xl">
+                    <img 
+                      src="/Intro/intro24.png"
+                      alt="포인트 적립하기" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 🌐 마지막 페이지 (푸터) */}
-    
-<footer className="bg-gradient-to-br from-black via-gray-700 to-gray-900 text-white py-16">
-  <div className="max-w-4xl mx-auto px-6 flex flex-col items-center text-center space-y-6 h-64">
-    
-    {/* 🌿 브랜드 로고 */}
-    <div className="text-5xl font-serif tracking-wide hover:text-teal-400 transition duration-300">
-      Ssuedam 🌿
+
+        {/* Tree Planting Section */}
+<section className="relative py-20 px-6">
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+    className="max-w-4xl mx-auto"
+  >
+    <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg p-12 border border-gray-100">
+      {/* 메인 타이틀 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className="text-center space-y-6"
+      >
+        <div className="inline-flex items-center justify-center space-x-2">
+          <span className="text-3xl">🌱</span>
+          <h2 className="text-3xl font-bold">
+            지금까지 <span className="text-green-600">23,521그루</span>의
+          </h2>
+        </div>
+        <h2 className="text-3xl font-bold">
+          나무를 심었습니다!
+        </h2>
+        <p className="text-gray-600 text-lg">
+          올바른 재활용으로 지구를 지키는 작은 실천, 지금 함께하세요.
+        </p>
+      </motion.div>
+
+      {/* 카운터 섹션 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+        className="mt-12 mb-12"
+      >
+        <div className="bg-green-50/50 backdrop-blur-sm rounded-2xl p-8 text-center border border-green-100">
+          <div className="flex items-center justify-center space-x-4">
+            <span className="text-4xl">🌲</span>
+            <span className="text-4xl font-bold text-green-600">+120 그루</span>
+          </div>
+          <p className="mt-4 text-gray-600">
+            오늘 하루 동안 사용자들이 심은 나무 수
+          </p>
+        </div>
+      </motion.div>
+
+      {/* 참여 버튼 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.6 }}
+        className="text-center"
+      >
+        <button
+          className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center mx-auto group hover:shadow-lg"
+          onClick={() => navigate("/participate")}
+        >
+          <span className="mr-2">✏️</span>
+          나도 함께하기
+        </button>
+      </motion.div>
     </div>
+  </motion.div>
+</section>
 
-    <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 1, duration: 1 }}
->
- 
-</motion.div>
+      {/* 푸터 섹션 */}
+      <footer className="relative z-10 bg-gradient-to-t from-gray-200 to-gray-100 text-gray-700 text-center py-10 mt-20">
+        <div className="flex justify-center items-center space-x-2 text-2xl font-semibold text-gray-800">
+          <span>🌿</span>
+          <span>Verda</span>
+        </div>
 
+        <div className="flex justify-center space-x-6 mt-4 text-gray-600 font-medium">
+        </div>
 
-    {/* 📧 연락처 */}
-    <p className="text-sm text-gray-400 mt-4">📧 ssuedam.team@gmail.com</p>
+        <div className="flex justify-center items-center space-x-6 mt-4 text-gray-500">
+          <a href="mailto:contact@ssuedam.com" className="flex items-center space-x-2 hover:text-gray-700 transition">
+            <span>📧 Verda@naver.com</span>
+          </a>
+          <a href="https://github.com/Verda" target="_blank" rel="noopener noreferrer"
+            className="flex items-center space-x-2 hover:text-gray-700 transition">
+            <FaGithub size={20} />
+            <span>GitHub</span>
+          </a>
+        </div>
 
-    {/* 🛠️ GitHub 링크 */}
-    <a 
-      href="https://github.com/your-github-repo" 
-      target="_blank" 
-      rel="noopener noreferrer"
-      className="flex items-center space-x-2 text-gray-400 hover:text-white transition mt-4"
-    >
-      {/* GitHub 아이콘 */}
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-        <path 
-          fillRule="evenodd" 
-          d="M12 2C6.477 2 2 6.477 2 12a10 10 0 006.839 9.489c.5.09.681-.217.681-.481v-1.696c-2.781.604-3.369-1.342-3.369-1.342-.455-1.155-1.109-1.463-1.109-1.463-.907-.62.068-.608.068-.608 1.004.07 1.532 1.03 1.532 1.03.891 1.529 2.339 1.087 2.907.831.09-.646.35-1.086.635-1.337-2.22-.252-4.555-1.111-4.555-4.945 0-1.092.39-1.986 1.029-2.683-.103-.253-.447-1.272.098-2.648 0 0 .84-.269 2.75 1.026A9.564 9.564 0 0112 6.838c.85.004 1.705.114 2.5.336 1.91-1.295 2.75-1.026 2.75-1.026.546 1.376.202 2.395.099 2.648.64.697 1.028 1.591 1.028 2.683 0 3.841-2.339 4.689-4.567 4.935.36.309.678.918.678 1.851v2.746c0 .267.18.574.688.475A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" 
-          clipRule="evenodd"
-        />
-      </svg>
-      <span className="font-sans">GitHub 저장소</span>
-    </a>
-
-    {/* ⚖️ 카피라이트 */}
-    <p className="text-xs text-gray-500 mt-6">© 2025 Ssuedam. All rights reserved.</p>
-  </div>
-</footer>
-
+        <p className="text-sm text-gray-500 mt-6">© 2024 Verda. All rights reserved.</p>
+      </footer>
     </div>
   )
 }

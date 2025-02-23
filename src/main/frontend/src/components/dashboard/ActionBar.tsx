@@ -82,7 +82,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users }) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-lg shadow-lg">
+    <div className=" flex flex-col items-center gap-4 p-4 bg-#E8EFF4 rounded-lg shadow-lg">
       {users.length > 0 && (
         <div className="flex gap-2 mb-4">
           {users.map((user, index) => (

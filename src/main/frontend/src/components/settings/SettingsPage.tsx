@@ -1,136 +1,90 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { BellIcon, UserIcon, TrashIcon, LogOutIcon } from "lucide-react";
-import BackgroundAnimation from "@/components/layout/BackgroudAnimation";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { BellIcon, UserIcon, TrashIcon, LogOutIcon } from "lucide-react"
+import styled from "styled-components"
 
 export function SettingsPage() {
-  const navigate = useNavigate();
-  const [isPushEnabled, setIsPushEnabled] = useState(true);
-  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const handleLogout = () => {
-    console.log("🔴 로그아웃 완료!");
-    navigate("/auth");
-  };
-
-  const handleDeleteAccount = () => {
-    console.log("⚠️ 계정이 삭제되었습니다!");
-    navigate("/auth");
-  };
+  const navigate = useNavigate()
+  const [isPushEnabled, setIsPushEnabled] = useState(true)
 
   return (
-    <div className="relative min-h-screen">
-      {/* 백그라운드 애니메이션 추가 */}
-      <BackgroundAnimation />
+    <div className="w-[400px] mx-auto min-h-screen flex flex-col bg-gray-50 text-gray-900 overflow-hidden shadow-xl rounded-xl">
+      {/* 🔝 헤더 */}
+      <div className="flex items-center justify-between px-6 py-5 bg-white shadow-md rounded-t-xl">
+        <button onClick={() => navigate(-1)} className="text-gray-600 text-lg">←</button>
+        <h1 className="text-xl font-semibold">설정</h1>
+        <div className="w-6"></div> {/* 우측 정렬 맞추기 */}
+      </div>
 
-      <div className="min-h-screen bg-white/70 px-4 py-8 relative z-50 pt-16">
-        <h1 className="text-3xl font-bold mb-6">⚙️ 설정</h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* 👤 계정 관리 */}
-          <Card className="p-6 flex items-center justify-between cursor-pointer bg-white/80" onClick={() => navigate("/settings/account")}>
-            <div className="flex items-center space-x-4">
-              <UserIcon size={24} />
-              <div>
-                <h3 className="text-lg font-semibold">계정 관리</h3>
-                <p className="text-sm text-gray-500">비밀번호 변경 및 로그인 설정</p>
-              </div>
-            </div>
-          </Card>
-
-          {/* 🔔 알림 설정 버튼 */}
-          <Card className="p-6 flex items-center justify-between bg-white/80">
-            <div className="flex items-center space-x-4">
-              <BellIcon size={24} />
-              <div>
-                <h3 className="text-lg font-semibold">알림 설정</h3>
-                <p className="text-sm text-gray-500">푸시 알림 및 이메일 알림</p>
-              </div>
-            </div>
-            <Button variant="outline" onClick={() => setShowNotificationSettings(true)}>설정</Button>
-          </Card>
-
-          {/* 📦 데이터 관리 */}
-          <Card className="p-6 flex items-center justify-between cursor-pointer bg-white/80" onClick={() => navigate("/settings/data")}>
-            <div className="flex items-center space-x-4">
-              <TrashIcon size={24} />
-              <div>
-                <h3 className="text-lg font-semibold">데이터 관리</h3>
-                <p className="text-sm text-gray-500">캐시 삭제 및 저장 공간 확인</p>
-              </div>
-            </div>
-          </Card>
-
-          {/* 🚪 로그아웃 */}
-          <Card className="p-6 flex items-center justify-between bg-white/80">
-            <div className="flex items-center space-x-4">
-              <LogOutIcon size={24} />
-              <div>
-                <h3 className="text-lg font-semibold">로그아웃</h3>
-                <p className="text-sm text-gray-500">현재 계정에서 로그아웃</p>
-              </div>
-            </div>
-            <Button variant="destructive" onClick={handleLogout}>로그아웃</Button>
-          </Card>
-
-          {/* ❌ 회원 탈퇴 */}
-          <Card className="p-6 flex items-center justify-between bg-white/80">
-            <div className="flex items-center space-x-4">
-              <TrashIcon size={24} />
-              <div>
-                <h3 className="text-sm font-semibold text-red-600">회원 탈퇴</h3>
-                <p className="text-xs text-gray-500">계정을 영구적으로 삭제합니다</p>
-              </div>
-            </div>
-            <Button variant="outline" className="text-red-600 border-red-600" onClick={() => setShowDeleteModal(true)}>
-              회원 탈퇴
-            </Button>
-          </Card>
-        </div>
-
-        {/* 알림 설정 모달 창 */}
-        {showNotificationSettings && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-[100]">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-xl font-bold mb-4">🔔 푸시 알림 설정</h2>
-              <div className="form-check form-switch">
-                <input 
-                  className="form-check-input" 
-                  type="checkbox" 
-                  role="switch" 
-                  id="pushNotificationSwitch"
-                  checked={isPushEnabled}
-                  onChange={() => setIsPushEnabled(!isPushEnabled)}
-                />
-                <label className="form-check-label" htmlFor="pushNotificationSwitch">
-                  {isPushEnabled ? "푸시 알림: ON" : "푸시 알림: OFF"}
-                </label>
-              </div>
-              <div className="flex justify-end mt-4">
-                <Button variant="outline" onClick={() => setShowNotificationSettings(false)}>닫기</Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 회원 탈퇴 확인 모달 */}
-        {showDeleteModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-[100]">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-xl font-bold text-red-600 mb-4">⚠️ 정말 회원 탈퇴하시겠습니까?</h2>
-              <p className="text-gray-600 mb-4">탈퇴 후 계정 복구는 불가능합니다.</p>
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setShowDeleteModal(false)}>취소</Button>
-                <Button variant="destructive" onClick={handleDeleteAccount}>탈퇴하기</Button>
-              </div>
-            </div>
-          </div>
-        )}
+      {/* ⚙️ 설정 목록 */}
+      <div className="mt-4 bg-white shadow-md rounded-xl flex-1 overflow-auto divide-y">
+        <SettingItem icon={<UserIcon size={22} />} text="비밀번호 재설정" onClick={() => navigate("/settings/account")} />
+        <SettingItem icon={<BellIcon size={22} />} text="알림 설정">
+          <StyledToggleSwitch isEnabled={isPushEnabled} onToggle={() => setIsPushEnabled(!isPushEnabled)} />
+        </SettingItem>
+        <SettingItem icon={<LogOutIcon size={22} />} text="로그아웃" onClick={() => navigate("/auth")} />
+        <SettingItem icon={<TrashIcon size={18} />} text="회원탈퇴" textColor="text-red-400 text-sm" className="py-3 px-4 opacity-80" onClick={() => navigate("/auth")} />
       </div>
     </div>
-  );   
+  )
 }
+
+/* ✅ 리스트 아이템 */
+function SettingItem({ icon, text, onClick, children, textColor = "text-gray-900", className = "" }: { icon: React.ReactNode, text: string, onClick?: () => void, children?: React.ReactNode, textColor?: string, className?: string }) {
+  return (
+    <div
+      onClick={onClick}
+      className={`flex items-center justify-between px-6 py-4 ${className} transition cursor-pointer`}
+    >
+      <div className="flex items-center space-x-4">
+        {icon}
+        <span className={`font-medium ${textColor}`}>{text}</span>
+      </div>
+      {children || <span className="text-gray-400 text-lg">›</span>}
+    </div>
+  )
+}
+
+/* ✅ styled-components 기반 토글 스위치 */
+const StyledToggleSwitch = ({ isEnabled, onToggle }: { isEnabled: boolean, onToggle: () => void }) => {
+  return (
+    <StyledWrapper isEnabled={isEnabled} onClick={onToggle}>
+      <div className="slider">
+        <div className="knob" />
+      </div>
+    </StyledWrapper>
+  )
+}
+
+const StyledWrapper = styled.div<{ isEnabled: boolean }>`
+  width: 60px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: ${({ isEnabled }) => (isEnabled ? "#2196F3" : "lightgray")};
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25) inset;
+  padding: 2px;
+
+  .slider {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .knob {
+    width: 26px;
+    height: 26px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.25);
+    transform: ${({ isEnabled }) => (isEnabled ? "translateX(30px)" : "translateX(0)")};
+  }
+`;
+
+export default SettingsPage;

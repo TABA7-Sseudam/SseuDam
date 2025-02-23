@@ -1,75 +1,131 @@
 /* ============================
-📌 배경 전체 스타일
+🌍 배경 스타일 (자연 친화적 느낌 추가)
 ============================ */
 .background-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
-  }
-  
-  /* ☁️ 구름 스타일 */
-  .cloud {
-    position: absolute;
-    width: 200px;
-    height: 100px;
-    opacity: 0.5;
-  }
-  
-  .cloud-1 {
-    top: 10%;
-    left: -200px;
-  }
-  .cloud-2 {
-    top: 20%;
-    left: -200px;
-  }
-  .cloud-3 {
-    top: 30%;
-    left: -200px;
-  }
-  
-  /* 🌿 나뭇잎 */
-  .leaf {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    opacity: 0.6;
-  }
-  
-  /* 💨 작은 바람 */
-  .small-wind {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    opacity: 0.3;
-  }
-  
-  /* ♻️ 재활용 아이콘 */
-  .recycle-icon {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    opacity: 0.4;
-  }
-  
-  /* 🌍 지구 아이콘 */
-  .earth-icon {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    opacity: 0.3;
-  }
-  
-  /* ✨ 빛의 흐름 */
-  .light-glow {
-    position: absolute;
-    width: 80%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-    opacity: 0.2;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #e9f5db, #fefae0); /* 연한 초록 → 따뜻한 크림색 */
+}
+
+/* ☁️ 부드럽게 떠다니는 구름 */
+.cloud {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  opacity: 0.6;
+  filter: blur(3px);
+  animation: moveClouds 30s linear infinite;
+}
+
+@keyframes moveClouds {
+  0% { transform: translateX(-200px); opacity: 0.4; }
+  50% { opacity: 0.7; }
+  100% { transform: translateX(120vw); opacity: 0.4; }
+}
+
+.cloud-1 { top: 8%; left: -200px; animation-duration: 25s; }
+.cloud-2 { top: 22%; left: -250px; animation-duration: 28s; }
+.cloud-3 { top: 35%; left: -220px; animation-duration: 30s; }
+
+/* 🌿 나뭇잎 (흔들리는 효과 추가) */
+.leaf {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  opacity: 0.7;
+  filter: drop-shadow(0px 0px 5px rgba(0, 255, 0, 0.3));
+  animation: floatLeaf 6s ease-in-out infinite;
+}
+
+@keyframes floatLeaf {
+  0% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(10deg) translateY(10px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+.leaf-1 { top: 10%; left: 15%; animation-duration: 5s; }
+.leaf-2 { top: 45%; left: 55%; animation-duration: 6s; }
+.leaf-3 { top: 70%; left: 10%; animation-duration: 7s; }
+
+/* 💨 바람 (부드러운 움직임 추가) */
+.wind {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  opacity: 0.3;
+  animation: swirlWind 10s linear infinite;
+  filter: blur(2px);
+}
+
+@keyframes swirlWind {
+  0% { transform: rotate(0deg) translateX(0); opacity: 0.2; }
+  50% { transform: rotate(15deg) translateX(10px); opacity: 0.5; }
+  100% { transform: rotate(0deg) translateX(0); opacity: 0.2; }
+}
+
+.wind-1 { top: 30%; left: 50%; animation-duration: 8s; }
+.wind-2 { top: 55%; left: 80%; animation-duration: 7s; }
+
+/* ♻️ 재활용 아이콘 (빛나는 효과 추가) */
+.recycle-icon {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  opacity: 0.6;
+  filter: drop-shadow(0px 0px 10px rgba(0, 255, 0, 0.4));
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.recycle-icon:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.recycle-1 { top: 10%; left: 20%; animation: rotateIcon 5s linear infinite; }
+.recycle-2 { top: 65%; left: 70%; animation: rotateIcon 6s linear infinite; }
+
+@keyframes rotateIcon {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* 🌍 지구 아이콘 (부드럽게 떠오르는 효과) */
+.earth-icon {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  opacity: 0.5;
+  filter: drop-shadow(0px 0px 10px rgba(0, 200, 255, 0.5));
+  animation: floatEarth 12s ease-in-out infinite;
+}
+
+@keyframes floatEarth {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+  100% { transform: translateY(0); }
+}
+
+.earth-1 { bottom: 10%; right: 15%; }
+
+/* ✨ 태양 광선 효과 추가 */
+.sunlight {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 200, 0.2) 0%, transparent 80%);
+  opacity: 0.4;
+  animation: glowEffect 6s ease-in-out infinite;
+}
+
+@keyframes glowEffect {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.4; }
+  100% { opacity: 0.3; }
+}
