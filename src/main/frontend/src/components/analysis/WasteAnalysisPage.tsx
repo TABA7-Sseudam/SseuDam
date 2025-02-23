@@ -169,7 +169,7 @@ export default function WasteAnalysisPage() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="w-full flex flex-col items-center mb-12"
         >
-          <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6">
+          <div className="w-full max-w-3xl bg-#E8EFF4 rounded-xl shadow-lg p-6">
             <h3 className="text-xl font-semibold mb-2 text-gray-800">포인트 현황</h3>
             <p className="text-sm text-gray-500 mb-4">획득 및 차감 포인트 상세 내역</p>
             <ResponsiveContainer width="100%" height={250}>
@@ -210,11 +210,11 @@ export default function WasteAnalysisPage() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="w-full flex flex-col items-center"
         >
-          <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6">
+          <div className="w-full max-w-3xl bg-#E8EFF4 rounded-xl shadow-lg p-6">
             <h3 className="text-xl font-semibold mb-2 text-gray-800">전체 성공률</h3>
             <p className="text-sm text-gray-500 mb-4">올바른 분리배출 달성률</p>
             <ResponsiveContainer width="100%" height={150}>
-              <BarChart layout="vertical" data={successData}>
+              <BarChart layout="vertical" data={successData} barSize={60}>
                 <defs>
                   <linearGradient id="successGradient" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="#FF9800" />
