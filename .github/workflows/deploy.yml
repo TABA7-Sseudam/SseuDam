@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 레포지토리 체크아웃
+      # 1. GitHub 리포지토리 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 2. SSH 비공개 키 설정 (GitHub Secrets에서 가져오기)
+      # 2. SSH 설정 (비공개 키 사용)
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # 비공개 키 사용
 
-      # 3. EC2에 파일 복사
+      # 3. EC2로 파일 복사
       - name: Copy files to EC2 instance
         run: |
           scp -o StrictHostKeyChecking=no -r ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/app
 
-      # 4. SSH로 EC2에 접속하여 배포 실행
+      # 4. SSH를 사용하여 EC2에서 서버 실행
       - name: SSH to EC2 and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
