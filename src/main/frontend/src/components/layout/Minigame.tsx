@@ -145,7 +145,7 @@ export default function Minigame({ className }: MinigameProps) {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`hidden md:flex flex-col w-64 bg-[#43A047] text-white p-6 space-y-4 rounded-r-lg shadow-lg ${className}`}
+      className={`hidden md:flex flex-col w-64 bg-[#4CAF50] text-white p-6 space-y-4 rounded-r-lg shadow-lg ${className}`}
     >
       <h2 className="text-2xl font-bold text-center whitespace-nowrap">🌿 친환경 미니게임</h2>
 
@@ -173,7 +173,7 @@ export default function Minigame({ className }: MinigameProps) {
                       ? option === quizQuestions[quizIndex].answer
                         ? "bg-green-500"
                         : "bg-red-500"
-                      : "bg-[#388E3C] hover:bg-green-600"
+                      : "bg-[#4CAF50] hover:bg-green-500" // ✅ 버튼 색상도 조정
                   }`}
                   disabled={selectedAnswer !== null || loading}
                 >
