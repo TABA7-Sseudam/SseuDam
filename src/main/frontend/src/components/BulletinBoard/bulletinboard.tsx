@@ -1,9 +1,8 @@
-import "bootstrap/dist/css/bootstrap.min.css"
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ChevronsLeft, ChevronsRight, ArrowRightCircle, Pencil } from "lucide-react";
 import BackgroundAnimation from "../layout/BackgroudAnimation";
-//import BackgroundAnimation from "../layout/BackgroudAnimation";
 
 interface BoardItem {
   id: string;
@@ -12,17 +11,17 @@ interface BoardItem {
   date: string;
 }
 
-export default function Rewards() {
-  const [currentPage, setCurrentPage] = useState(1)
+export default function BulletinBoard() {
+  const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5;
-  const [activeCategory, setActiveCategory] = useState("")
-  const categories = ["공지", "이벤트", "AI Feedback", "아파트게시판","법령"]
-  const [filteredData, setFilteredData] = useState<BoardItem[]>([])
+  const [activeCategory, setActiveCategory] = useState<string | null>(null); // ✅ 선택한 카테고리 상태
+  const categories = ["공지", "이벤트", "AI Feedback", "아파트게시판", "법령"];
+  const [filteredData, setFilteredData] = useState<BoardItem[]>([]);
 
   useEffect(() => {
-    console.log("Rewards component mounted.")
-    fetchData()
-  }, [])
+    console.log("BulletinBoard component mounted.");
+    fetchData();
+  }, []);
 
   const fetchData = () => {
     const data: BoardItem[] = [
@@ -39,34 +38,46 @@ export default function Rewards() {
       { id: '12', classification: 'AI Feedback', title: 'AI 덕분에 분리배출 제대로 배웠어요!', date: '2025-02-19' },
       { id: '13', classification: '아파트게시판', title: '서로 조금씩 더 신경 써봐요!', date: '2025-02-20' },
       { id: '14', classification: '법령', title: '2025년부터 커피숍 일회용 컵 보증금제 시행', date: '2025-02-15' }
-    ]
-    setFilteredData(data)
-  }
+    ];
+    setFilteredData(data);
+  };
 
-  const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1))
-  const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+  const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const handlePageClick = (page: number) => setCurrentPage(page);
   const handleCategoryClick = (category: string) => setActiveCategory(category);
-  const handleWritePost = () => alert("게시글 작성 페이지로 이동합니다.");
-  const handleResetCategory = () => setActiveCategory("");
+  const handleResetCategory = () => setActiveCategory(null);
+
+  // ✅ 글쓰기 버튼 클릭 시 선택한 게시판으로 이동하도록 설정
+  const handleWritePost = () => {
+    if (!activeCategory) {
+      alert("⚠️ 먼저 게시판을 선택해주세요!");
+      return;
+    }
+    alert(`📝 '${activeCategory}' 게시판에 글을 작성합니다.`);
+    // ✅ 여기에 게시글 작성 페이지로 이동하는 코드 추가 가능 (예: navigate(`/write?category=${activeCategory}`))
+  };
 
   return (
     <div className="relative min-h-screen">
       <BackgroundAnimation />
       <div className="flex min-h-screen bg-green-50 relative z-50 pt-16">
+        {/* 사이드바 - 카테고리 선택 */}
         <div className="w-64 bg-green-100 shadow-md flex flex-col border-r">
           <h2 className="p-4 text-xl font-bold border-b bg-green-200">Board</h2>
           <nav className="flex flex-col p-4 space-y-4">
             {categories.map((item) => (
-              <button 
-                key={item} 
+              <button
+                key={item}
                 onClick={() => handleCategoryClick(item)}
-                className={`text-gray-700 hover:text-green-600 transition font-medium no-underline flex items-center ${activeCategory === item ? "text-green-700 font-bold" : ""}`}
+                className={`text-gray-700 hover:text-green-600 transition font-medium no-underline flex items-center ${
+                  activeCategory === item ? "text-green-700 font-bold" : ""
+                }`}
               >
                 <ArrowRightCircle className="mr-2" /> {item}
               </button>
             ))}
-            <button 
+            <button
               onClick={handleResetCategory}
               className="mt-4 p-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition"
             >
@@ -74,6 +85,8 @@ export default function Rewards() {
             </button>
           </nav>
         </div>
+
+        {/* 메인 게시판 목록 */}
         <div className="flex-1 p-8 bg-white/80 flex flex-col justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-6 text-gray-800">{activeCategory || "Board"}</h2>
@@ -87,19 +100,26 @@ export default function Rewards() {
                 </tr>
               </thead>
               <tbody>
-                {filteredData.filter(item => !activeCategory || item.classification === activeCategory).map((item, index) => (
-                  <tr key={index} className="border-b hover:bg-green-50 transition">
-                    <td className="p-3 text-gray-500">{item.id}</td>
-                    <td className="p-3">{item.classification}</td>
-                    <td className="p-3 text-green-600 hover:underline cursor-pointer">{item.title}</td>
-                    <td className="p-3 text-gray-500">{item.date}</td>
-                  </tr>
-                ))}
+                {filteredData
+                  .filter((item) => !activeCategory || item.classification === activeCategory)
+                  .map((item, index) => (
+                    <tr key={index} className="border-b hover:bg-green-50 transition">
+                      <td className="p-3 text-gray-500">{item.id}</td>
+                      <td className="p-3">{item.classification}</td>
+                      <td className="p-3 text-green-600 hover:underline cursor-pointer">{item.title}</td>
+                      <td className="p-3 text-gray-500">{item.date}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
+
+          {/* 페이지네이션 & 글쓰기 버튼 */}
           <div className="flex flex-col items-center mt-6 p-4 bg-green-50/80 rounded-t-lg shadow-inner">
-            <Button onClick={handleWritePost} className="mb-4 bg-green-600 text-white hover:bg-green-700 flex items-center px-6 py-2 rounded-lg">
+            <Button
+              onClick={handleWritePost}
+              className="mb-4 bg-green-600 text-white hover:bg-green-700 flex items-center px-6 py-2 rounded-lg"
+            >
               <Pencil className="mr-2" /> 글쓰기
             </Button>
             <div className="flex justify-center">
@@ -107,11 +127,7 @@ export default function Rewards() {
                 <ChevronsLeft className="mr-1" /> Previous
               </Button>
               {[1, 2, 3, 4, 5].map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => handlePageClick(page)}
-                  className={`mx-1 px-4 py-2 ${currentPage === page ? "bg-green-700 text-white" : "bg-green-300 border border-black text-black hover:bg-green-500"}`}
-                >
+                <Button key={page} onClick={() => handlePageClick(page)} className={`mx-1 px-4 py-2 ${currentPage === page ? "bg-green-700 text-white" : "bg-green-300 border border-black text-black hover:bg-green-500"}`}>
                   {page}
                 </Button>
               ))}
@@ -123,5 +139,5 @@ export default function Rewards() {
         </div>
       </div>
     </div>
-  )
+  );
 }
