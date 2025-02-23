@@ -20,12 +20,17 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # 비공개 키 사용
 
-      # 3. EC2로 파일 복사
+      # 3. 호스트 키 자동 추가
+      - name: Add EC2 host to known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+
+      # 4. EC2로 파일 복사 (rsync 사용, .git 폴더 제외)
       - name: Copy files to EC2 instance
         run: |
-          scp -o StrictHostKeyChecking=no -r ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/app
+          rsync -avz --exclude .git ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/app
 
-      # 4. SSH를 사용하여 EC2에서 서버 실행
+      # 5. SSH를 사용하여 EC2에서 서버 실행
       - name: SSH to EC2 and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
