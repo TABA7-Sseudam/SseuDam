@@ -132,7 +132,7 @@ const UserCard = ({
             <div className="absolute top-0 right-0 h-full border-l-4 border-black"></div>
           </div>
           <p className="text-gray-600 text-sm whitespace-nowrap">
-            이번달 RP🌱: {xp} / 10000
+            이번달 VP🌱: {xp} / 10000
           </p>
           <p className="text-gray-600 text-sm">{message}</p>
         </div>
@@ -253,9 +253,9 @@ export function Ranking() {
 
   if (users.length === 0) {
     return (
-      <div className="relative min-h-screen">
+      <div className="relative min-h-screen pt-16 mt-[-64px]">
         <BackgroundAnimation />
-        <div className="relative z-50 flex justify-center items-center min-h-screen">
+        <div className="relative z-40 flex justify-center items-center min-h-screen">
           <p className="text-gray-500 animate-pulse">랭킹 데이터 로딩 중...</p>
         </div>
       </div>
@@ -266,19 +266,19 @@ export function Ranking() {
     <div className="relative min-h-screen">
       <AnimationStyles />
       <BackgroundAnimation />
-      <div className="container mx-auto p-6 relative z-50 pt-16">
-        {/* 상단 헤더 및 드롭다운 */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            🏢 ㅇㅇ시 ㅇㅇ동 분리수거 랭킹
-            <OverlayTrigger
-              placement="top"
-              overlay={
-                <TooltipComponent id="tooltip-top">
-                  등급 & 랭킹 알아보기!
-                </TooltipComponent>
-              }
-            >
+      <div className="container mx-auto px-6 relative z-40">
+        <div className="pt-20"> 
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              🏢 대림 1동 분리수거 랭킹
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <TooltipComponent id="tooltip-top">
+                    등급 & 랭킹 알아보기!
+                  </TooltipComponent> 
+                }
+              >
               <button
                 type="button"
                 className="btn btn-link p-0 ml-2 text-primary"
@@ -503,7 +503,7 @@ export function Ranking() {
               );
             })
           ) : (
-            <p className="text-center text-gray-500">랭킹 데이터가 없습니다.</p>
+            <p className="text-center text-gray-500">랭킹 데이터 로딩중...</p>
           )}
           <div className="flex justify-center mt-4">
             <Button onClick={handlePrevPage} disabled={currentPage === 1} className="mx-2 bg-black text-white">
@@ -524,6 +524,7 @@ export function Ranking() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
