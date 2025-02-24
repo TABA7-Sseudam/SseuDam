@@ -24,7 +24,7 @@ public class AIController {
 
     public AIController(WebClient.Builder webClientBuilder, RankingService rankingService,
                         RankCalculatorService rankCalculatorService, AIAnalysisResultRepository aiAnalysisResultRepository, FirebaseAuthService firebaseAuthService) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:5001").build();
+        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:5001").build();
         this.rankingService = rankingService;
         this.rankCalculatorService = rankCalculatorService;
         this.aiAnalysisResultRepository = aiAnalysisResultRepository;
