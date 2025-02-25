@@ -1,7 +1,7 @@
 export const availableIcons = [
     "https://img.freepik.com/premium-vector/art-nouveau-design_23-2151489329.jpg",
     "https://img.freepik.com/vector-premium/encantador-gato-blanco-rodeado-coloridas-flores_1198035-6993.jpg",
-    "uhttps://img.freepik.com/premium-vector/easter-greeting-card-vector-poster-display-design_1138840-22511.jpg",
+    "https://img.freepik.com/premium-vector/easter-greeting-card-vector-poster-display-design_1138840-22511.jpg",
     "https://img.freepik.com/premium-vector/bichon-dachshund-dogs-breeds-pet-owners-legs-stroll-outdoor-woman-leading-cute-purebred-doggies-two-little-puppies-leash-nature-beach-summer-flat-vector-illustration_198278-19337.jpg",
     "https://img.freepik.com/vector-gratis/mar-calma-o-superficie-oceano-pequenas-olas-cielo-azul-ilustracion-plana_1284-62000.jpg",
     "https://img.freepik.com/vector-gratis/dibujado-mano-tipo-coleccion-arboles_23-2149115077.jpg",

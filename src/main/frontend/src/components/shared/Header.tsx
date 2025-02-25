@@ -114,7 +114,7 @@ export function Header() {
             className="text-2xl font-bold cursor-pointer flex items-center"
             onClick={() => navigate("/home")}
           >
-            🔄 <span className="ml-2">EcoSort AI</span>
+            🌿 <span className="ml-2">Verda</span>
           </h1>
 
           {/* 데스크톱 내비게이션 - 탭 스타일 */}

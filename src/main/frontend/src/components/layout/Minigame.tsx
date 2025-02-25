@@ -91,7 +91,7 @@ export default function Minigame({ className }: MinigameProps) {
   const submitCorrectAnswer = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Firebase 토큰 가져오기
       const currentUser = auth.currentUser;
@@ -101,18 +101,18 @@ export default function Minigame({ className }: MinigameProps) {
 
       // 토큰 새로 가져오기
       const idToken = await currentUser.getIdToken(true);
-      
+
       // API 요청
       const response = await fetch("http://54.180.242.43:8080/api/quiz/correct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           userEmail: currentUser.email,
-          points: 1
-        })
+          points: 1,
+        }),
       });
 
       if (response.status === 401) {
@@ -127,13 +127,14 @@ export default function Minigame({ className }: MinigameProps) {
       const data = await response.json();
       console.log("✅ 포인트 적립 성공:", data);
       return true;
-
     } catch (error) {
       console.error("포인트 적립 오류:", error);
-      const errorMessage = error instanceof Error ? error.message : "포인트 적립 중 오류가 발생했습니다.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "포인트 적립 중 오류가 발생했습니다.";
       setError(errorMessage);
       return false;
-
     } finally {
       setLoading(false);
     }
@@ -178,7 +179,7 @@ export default function Minigame({ className }: MinigameProps) {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`hidden md:flex flex-col w-64 bg-[#43A047] text-white p-6 space-y-4 rounded-r-lg shadow-lg ${className}`}
+      className={`hidden md:flex flex-col w-64 bg-[#4CAF50] text-white p-6 space-y-4 rounded-r-lg shadow-lg ${className}`}
     >
       <h2 className="text-2xl font-bold text-center whitespace-nowrap">🌿 친환경 미니게임</h2>
 
@@ -188,12 +189,14 @@ export default function Minigame({ className }: MinigameProps) {
         <p className="text-center text-sm text-red-400">로그인이 필요합니다.</p>
       )}
 
+      {/* 오류 표시 영역 */}
       {error && (
         <div className="bg-red-500 p-2 rounded text-sm text-white text-center">
           {error}
         </div>
       )}
 
+      {/* 퀴즈 영역: userEmail이 있을 때만 표시 */}
       {userEmail && (
         <div className="bg-green-700 p-4 rounded-lg shadow">
           <h3 className="text-xl font-semibold">🌱 환경 퀴즈</h3>
@@ -211,15 +214,18 @@ export default function Minigame({ className }: MinigameProps) {
                     ? option === quizQuestions[quizIndex].answer
                       ? "bg-green-500"
                       : "bg-red-500"
-                    : "bg-[#388E3C] hover:bg-green-600"
+                    : "bg-[#4CAF50] hover:bg-green-500"
                 }`}
                 disabled={selectedAnswer !== null || loading}
               >
-                {loading && option === quizQuestions[quizIndex].answer ? "포인트 적립 중..." : option}
+                {loading && option === quizQuestions[quizIndex].answer
+                  ? "포인트 적립 중..."
+                  : option}
               </motion.button>
             ))}
           </div>
 
+          {/* 정/오답 메시지 */}
           {message && <p className="mt-2 text-sm text-center">{message}</p>}
         </div>
       )}
