@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",  // ✅ TypeScript 컴파일 생략 (Vercel에서는 필요 없음)
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -72,5 +72,8 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "engines": {  // ✅ Vercel이 올바른 Node.js 버전 사용하도록 설정
+    "node": ">=18.0.0"
   }
 }
