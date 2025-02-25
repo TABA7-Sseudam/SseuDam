@@ -12,6 +12,7 @@ export default defineConfig({
   define: {
     global: {}, // ✅ global 정의하여 브라우저 환경 대응
   },
+  base: "./",  // ✅ Vercel에서 정적 파일을 올바르게 찾을 수 있도록 설정
   server: {
     proxy: {
       '/api': {
