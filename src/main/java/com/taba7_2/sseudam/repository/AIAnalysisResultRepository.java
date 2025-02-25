@@ -7,9 +7,19 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface AIAnalysisResultRepository extends JpaRepository<AIAnalysisResult, String> {
+
+    // ✅ 최신 AI 분석 결과 조회 (네이티브 SQL)
+    @Query(value = """
+        SELECT * FROM analysis_result_data 
+        WHERE uid = :uid
+        ORDER BY created_at DESC
+        LIMIT 1
+    """, nativeQuery = true)
+    Optional<Map<String, Object>> findLatestAnalysisResultByUser(String uid);
 
     // ✅ 최근 6일 분석 결과 조회
     @Query(value = """

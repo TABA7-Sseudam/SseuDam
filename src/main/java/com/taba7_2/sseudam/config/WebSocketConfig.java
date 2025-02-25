@@ -24,5 +24,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws/camera-sockjs")  // ✅ SockJS 지원하는 엔드포인트 (기존 방식)
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
+
+        // ✅ AI 분석 결과를 WebSocket으로 전달하기 위한 엔드포인트 추가
+        registry.addEndpoint("/ws/ai-results")
+                .setAllowedOriginPatterns("*");
+
+        registry.addEndpoint("/ws/ai-results-sockjs")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
     }
 }

@@ -1,11 +1,15 @@
 package com.taba7_2.sseudam.model;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -42,6 +46,10 @@ public class AIAnalysisResult {
     @Column(nullable = true)
     private Long apartmentId;
 
+    // ✅ `detectedObjects` JSON 데이터 저장
+    @Column(columnDefinition = "TEXT") // JSON을 문자열로 저장
+    private String detectedObjectsJson;
+
     // ✅ `createdAt`에서 YYYYMM 형식으로 변환된 `month` 추가
     @Transient  // 데이터베이스에 저장되지 않지만 조회 시 사용할 수 있도록 설정
     private String month;
@@ -67,5 +75,15 @@ public class AIAnalysisResult {
         this.material = material;
         this.apartmentId = apartmentId;
         this.month = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+    }
+
+    // ✅ JSON 문자열을 List<Map<String, Object>> 형식으로 변환하는 메서드 추가
+    public List<Map<String, Object>> getDetectedObjects() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(detectedObjectsJson, new TypeReference<>() {});
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
