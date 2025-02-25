@@ -31,6 +31,10 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일 경고 제한 (1MB)
     rollupOptions: {
       output: {
+        // 추가: 파일 이름 형식을 명시적으로 지정하여 MIME 타입 오류 방지
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {
