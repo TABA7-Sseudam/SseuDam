@@ -1,10 +1,7 @@
 import { useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { motion, useInView } from "framer-motion"
+import { motion } from "framer-motion"
 import { FaGithub } from "react-icons/fa"
-import { FaTree, FaPencilAlt } from "react-icons/fa"
-import { Divide } from "lucide-react"
 
 export function CompanyIntroPage() {
   const navigate = useNavigate()

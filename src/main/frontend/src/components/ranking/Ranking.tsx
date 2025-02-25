@@ -9,7 +9,30 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Dropdown from "react-bootstrap/Dropdown";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import TooltipComponent from 'react-bootstrap/Tooltip';
+import { availableIcons } from "@/utils/iconList";
 
+/* -------------------------------------
+   (추가) 다른 유저에게 랜덤 아이콘을 부여하는 함수
+   - 한 번 정하면 localStorage에 저장 -> 재접속시 유지
+----------------------------------------*/
+function getRandomIconForUser(userName: string) {
+  if (typeof window === "undefined") return null;  
+  const localStorageKey = `icon_for_${userName}`;
+  const existingIcon = localStorage.getItem(localStorageKey);
+  
+  if (existingIcon) {
+    return existingIcon;
+  } else {
+    const randomIcon =
+      availableIcons[Math.floor(Math.random() * availableIcons.length)];
+    localStorage.setItem(localStorageKey, randomIcon);
+    return randomIcon;
+  }
+}
+
+/* -------------------------------------
+   0. 애니메이션 스타일 정의 (기존 유지)
+----------------------------------------*/
 const AnimationStyles = () => (
   <style>{`
     @keyframes bounceIn {
@@ -86,6 +109,10 @@ const AnimationStyles = () => (
   `}</style>
 );
 
+/* -------------------------------------
+   1. 사용자 카드 (±1 등수) 섹션에서 쓰일 UserCard
+   → highlight(내 계정)인 경우 localStorage의 아이콘 사용
+----------------------------------------*/
 const UserCard = ({
   name,
   grade,
@@ -107,35 +134,63 @@ const UserCard = ({
   isFirst?: boolean;
   isLast?: boolean;
 }) => {
+  // highlight === true → 현재 로그인 유저의 아이콘
+  // 그 외(다른 유저)는 랜덤 아이콘
+  let userIcon = null;
+  if (typeof window !== "undefined") {
+    if (highlight) {
+      userIcon = localStorage.getItem("selectedIcon");
+    } else {
+      userIcon = getRandomIconForUser(name);
+    }
+  }
+
   const borderClasses = `
     ${isFirst ? 'rounded-t-lg border-t border-l border-r' : ''}
     ${isLast ? 'rounded-b-lg border-b border-l border-r' : ''}
     ${!isFirst && !isLast ? 'border-l border-r' : ''}
     ${highlight ? 'bg-blue-200' : 'bg-[#E8EFF4]'}
   `;
+
   return (
     <div className={`p-4 flex flex-col justify-center flex-1 ${borderClasses}`}>
       <div className="flex items-center relative h-40">
-        <div className="w-24 h-24 border-4 border-black rounded-full flex items-center justify-center mr-4 relative">
-          <FaUser size={40} className="text-black" />
+        {/* 프로필 영역 */}
+        <div className="w-24 h-24 border-4 border-black rounded-full flex items-center justify-center mr-4 relative overflow-hidden">
+          {userIcon ? (
+            <img
+              src={userIcon}
+              alt={`${name}의 프로필 아이콘`}
+              className="object-cover w-full h-full"
+            />
+          ) : (
+            <FaUser size={40} className="text-black" />
+          )}
           {highlight && (
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-0.5 rounded-t-md">
               my
             </div>
           )}
         </div>
+
+        {/* 정보 텍스트 */}
         <div className="flex-grow relative pr-20">
           <h2 className="text-xl font-bold">{name}</h2>
           <p className="text-gray-600">{grade}</p>
           <div className="w-[130%] bg-gray-200 h-4 rounded mt-2 mb-1 relative">
-            <div className="bg-green-400 h-4 rounded" style={{ width: `${(xp / 10000) * 100}%` }}></div>
+            <div
+              className="bg-green-400 h-4 rounded"
+              style={{ width: `${(xp / 10000) * 100}%` }}
+            ></div>
             <div className="absolute top-0 right-0 h-full border-l-4 border-black"></div>
           </div>
           <p className="text-gray-600 text-sm whitespace-nowrap">
-            이번달 RP🌱: {xp} / 10000
+            이번달 VP🌱: {xp} / 10000
           </p>
           <p className="text-gray-600 text-sm">{message}</p>
         </div>
+
+        {/* 순위 */}
         <div className="flex flex-col justify-center items-center text-4xl font-bold text-black pl-4 w-44">
           {rank}
           <p className="text-green-600 text-sm mt-1 text-center">{rankDifference}</p>
@@ -145,6 +200,9 @@ const UserCard = ({
   );
 };
 
+/* -------------------------------------
+   2. 현재 유저의 누적 XP바 (EcoProgressBar)
+----------------------------------------*/
 const EcoProgressBar = ({ totalXP, grade }: { totalXP: number; grade: string }) => {
   const levelUpPoints = 10000;
   const progressPercentage = (totalXP / levelUpPoints) * 100;
@@ -161,7 +219,10 @@ const EcoProgressBar = ({ totalXP, grade }: { totalXP: number; grade: string }) 
 
       {/* XP 진행 바 */}
       <div className="w-full h-6 bg-gray-300 rounded-full overflow-hidden relative mt-2">
-        <div className="h-full bg-green-500 rounded-full" style={{ width: `${progressPercentage}%` }}></div>
+        <div
+          className="h-full bg-green-500 rounded-full"
+          style={{ width: `${progressPercentage}%` }}
+        ></div>
         <div
           className="absolute -top-8 z-20"
           style={{ left: `${tooltipPosition}%`, transform: 'translateX(-50%)' }}
@@ -188,15 +249,22 @@ const EcoProgressBar = ({ totalXP, grade }: { totalXP: number; grade: string }) 
   );
 };
 
+/* -------------------------------------
+   3. 최종 Ranking 컴포넌트
+----------------------------------------*/
 export function Ranking() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  // 초기값은 "공주아파트"로 지정하지만, 최초 로드 시 현재 유저의 아파트로 한 번만 업데이트할 예정입니다.
+
+  // 기본적으로 "공주아파트"로 보이게
   const [selectedApartment, setSelectedApartment] = useState("공주아파트");
   const [initialSelectionSet, setInitialSelectionSet] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
+  /* -------------------------------------
+     3-1. 아파트 선택/유저 fetch
+  ----------------------------------------*/
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -211,7 +279,7 @@ export function Ranking() {
     loadData();
   }, [selectedApartment]);
 
-  // 최초 로드 시 한 번만 현재 유저의 아파트로 초기 선택값을 업데이트 (다른 선택 시 덮어쓰지 않음)
+  // 로딩 끝난 후, 한 번만 현재 유저의 아파트로 초기 선택값 업데이트
   useEffect(() => {
     if (!initialSelectionSet && currentUser && currentUser.apartment !== "종합랭킹") {
       if (currentUser.apartment !== selectedApartment) {
@@ -221,18 +289,25 @@ export function Ranking() {
     }
   }, [currentUser, selectedApartment, initialSelectionSet]);
 
+  // 아파트 드롭다운 바뀌면 페이지를 1로
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedApartment]);
 
+  // apartment별로 필터링
   const filteredUsers = selectedApartment === "종합랭킹"
     ? users
     : users.filter(user => user.apartment === selectedApartment);
 
+  // rank 기준으로 정렬
   const sortedUsers = [...filteredUsers].sort((a, b) => a.rank - b.rank);
 
-  const currentIndex = currentUser ? sortedUsers.findIndex(u => u.name === currentUser.name) : -1;
+  // currentUser의 인덱스
+  const currentIndex = currentUser
+    ? sortedUsers.findIndex(u => u.name === currentUser.name)
+    : -1;
 
+  // ±1 등수 계산
   let userCards: (User & { position: 'above' | 'current' | 'below' })[] = [];
   if (currentUser && currentIndex !== -1) {
     if (currentIndex > 0) {
@@ -244,6 +319,7 @@ export function Ranking() {
     }
   }
 
+  // 페이지네이션
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -251,11 +327,12 @@ export function Ranking() {
     if (currentPage < Math.ceil(sortedUsers.length / 10)) setCurrentPage(currentPage + 1);
   };
 
+  // 로딩 중 또는 데이터가 없을 때
   if (users.length === 0) {
     return (
-      <div className="relative min-h-screen">
+      <div className="relative min-h-screen pt-16">
         <BackgroundAnimation />
-        <div className="relative z-50 flex justify-center items-center min-h-screen">
+        <div className="relative z-40 flex justify-center items-center min-h-screen">
           <p className="text-gray-500 animate-pulse">랭킹 데이터 로딩 중...</p>
         </div>
       </div>
@@ -263,14 +340,17 @@ export function Ranking() {
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen pt-16">
       <AnimationStyles />
       <BackgroundAnimation />
-      <div className="container mx-auto p-6 relative z-50 pt-16">
-        {/* 상단 헤더 및 드롭다운 */}
+
+      <div className="container mx-auto px-6 relative z-40">
+        {/* -------------------------------
+            헤더 + 아파트 선택 드롭다운
+        --------------------------------*/}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold flex items-center gap-2">
-            🏢 ㅇㅇ시 ㅇㅇ동 분리수거 랭킹
+            🏢 대림 1동 분리수거 랭킹
             <OverlayTrigger
               placement="top"
               overlay={
@@ -301,10 +381,12 @@ export function Ranking() {
           </Dropdown>
         </div>
 
-        {/* 1. 상위 사용자 카드 (Top 3) - 데스크탑 */}
+        {/* ------------------------------------
+            1. 상위 3명 (Top3) → 아이콘 노출 X (기존 유지)
+        --------------------------------------*/}
         <div className="w-full">
           <div className="hidden md:flex justify-center items-end relative">
-            {/* 2등 (왼쪽) */}
+            {/* 2등 */}
             {sortedUsers[1] && (
               <div className="flex flex-col items-center mx-4" style={{ marginBottom: '2rem' }}>
                 {(() => {
@@ -334,7 +416,7 @@ export function Ranking() {
               </div>
             )}
 
-            {/* 1등 (중앙) */}
+            {/* 1등 */}
             {sortedUsers[0] && (
               <div className="flex flex-col items-center mx-4">
                 {(() => {
@@ -364,7 +446,7 @@ export function Ranking() {
               </div>
             )}
 
-            {/* 3등 (오른쪽) */}
+            {/* 3등 */}
             {sortedUsers[2] && (
               <div className="flex flex-col items-center mx-4" style={{ marginBottom: '2rem' }}>
                 {(() => {
@@ -395,13 +477,14 @@ export function Ranking() {
             )}
           </div>
 
-          {/* 모바일 Fallback */}
+          {/* 모바일 Fallback (Top3) */}
           <div className="grid md:hidden grid-cols-1 gap-4 justify-items-center">
             {sortedUsers.slice(0, 3).map((user, index) => {
               let medalBg = "";
               let crownColor = "";
               let ribbonSize = "";
               let rankLabel = `${index + 1}위`;
+
               if (index === 0) {
                 medalBg = user.bgColor || "bg-yellow-100";
                 crownColor = user.crownColor || "text-yellow-400";
@@ -415,11 +498,14 @@ export function Ranking() {
                 crownColor = user.crownColor || "text-orange-400";
                 ribbonSize = "w-16";
               }
+
               return (
                 <div key={user.name} className="relative flex flex-col items-center">
                   <img src="/Ranking/medal.png" alt="Medal Ribbon" className={`${ribbonSize}`} />
                   <div className="mt-[-8px]">
-                    <div className={`${medalBg} w-64 h-64 rounded-full shadow-md flex flex-col items-center justify-center p-4`}>
+                    <div
+                      className={`${medalBg} w-64 h-64 rounded-full shadow-md flex flex-col items-center justify-center p-4`}
+                    >
                       <FaCrown className={`mb-2 text-3xl ${crownColor}`} />
                       <h2 className="text-xl font-bold">{user.name}</h2>
                       <p className="text-sm">{user.grade}</p>
@@ -434,10 +520,12 @@ export function Ranking() {
           </div>
         </div>
 
-        {/* 2. 사용자 카드 섹션 + 나의 등급 섹션 */}
+        {/* ------------------------------------
+            2. 사용자 카드 섹션(±1등수) + 나의XP
+            → 아이콘 노출 (현재유저만)
+        --------------------------------------*/}
         {currentUser && (selectedApartment === currentUser.apartment || selectedApartment === "종합랭킹") && currentIndex !== -1 && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-            {/* 사용자 등급(±1) 카드 섹션 */}
             <Card className="p-0 overflow-hidden border border-gray-300 rounded-lg flex flex-col h-full bg-[#E8EFF4] shadow-lg">
               {userCards.map((user, idx) => {
                 let rankDifference = '';
@@ -450,6 +538,7 @@ export function Ranking() {
                 } else if (user.position === 'below') {
                   rankDifference = `${user.name}님이 맹 추격중!`;
                 }
+
                 return (
                   <UserCard
                     key={user.name}
@@ -469,7 +558,7 @@ export function Ranking() {
 
             <div className="flex flex-col gap-6">
               <EcoProgressBar totalXP={currentUser.totalPoints} grade={currentUser.grade} />
-              {/* 캐릭터 카드 이미지: 클릭 시 Rank_Tier_Guide.tsx로 이동하며 state 전달 */}
+              {/* Rank_Tier_Guide로 이동하는 배너 */}
               <img
                 src="/Ranking/Character_Card.png"
                 alt="Character Card"
@@ -480,23 +569,55 @@ export function Ranking() {
           </div>
         )}
 
-        {/* 3. 랭킹보드 섹션 */}
+        {/* ------------------------------------
+            3. 랭킹보드 섹션 (페이징)
+            → 아이콘 노출 (현재유저만 제외한 나머지 랜덤)
+        --------------------------------------*/}
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">🏆 {selectedApartment} 랭킹보드</h2>
           {sortedUsers.length > 0 ? (
             sortedUsers.slice((currentPage - 1) * 10, currentPage * 10).map((user, index) => {
               const actualIndex = (currentPage - 1) * 10 + index;
+
+              const isCurrentUser = currentUser && user.name === currentUser.name;
+              let userIcon = null;
+              if (typeof window !== "undefined") {
+                if (isCurrentUser) {
+                  userIcon = localStorage.getItem("selectedIcon");
+                } else {
+                  userIcon = getRandomIconForUser(user.name);
+                }
+              }
+
               return (
                 <Card key={user.name} className="flex items-center p-4 mb-2 shadow-lg bg-[#E8EFF4]">
                   <span className="text-xl font-bold w-12">{actualIndex + 1}위</span>
-                  <div className="w-16 h-16 bg-black rounded-full mx-4"></div>
+
+                  {/* 프로필 원 */}
+                  <div className="w-16 h-16 bg-black rounded-full mx-4 overflow-hidden flex items-center justify-center">
+                    {userIcon ? (
+                      <img
+                        src={userIcon}
+                        alt={`${user.name}의 아이콘`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <FaUser size={28} className="text-white" />
+                    )}
+                  </div>
+
                   <div className="flex-grow">
                     <h3 className="text-lg font-semibold">{user.name}</h3>
                     <p className="text-sm text-gray-600">{user.grade}</p>
                     <div className="w-full bg-gray-200 h-4 rounded mt-2 mb-1">
-                      <div className="bg-green-400 h-4 rounded" style={{ width: `${(user.monthlyPoints / 10000) * 100}%` }}></div>
+                      <div
+                        className="bg-green-400 h-4 rounded"
+                        style={{ width: `${(user.monthlyPoints / 10000) * 100}%` }}
+                      ></div>
                     </div>
-                    <p className="text-gray-600 text-sm">이번달 VP🌱: {user.monthlyPoints} / 10000</p>
+                    <p className="text-gray-600 text-sm">
+                      이번달 VP🌱: {user.monthlyPoints} / 10000
+                    </p>
                     <p className="text-gray-600 text-sm">누적 VP🌳: {user.totalPoints}</p>
                   </div>
                 </Card>
@@ -505,6 +626,8 @@ export function Ranking() {
           ) : (
             <p className="text-center text-gray-500">랭킹 데이터가 없습니다.</p>
           )}
+
+          {/* 페이징 버튼 */}
           <div className="flex justify-center mt-4">
             <Button onClick={handlePrevPage} disabled={currentPage === 1} className="mx-2 bg-black text-white">
               이전
@@ -513,12 +636,20 @@ export function Ranking() {
               <Button
                 key={page + 1}
                 onClick={() => setCurrentPage(page + 1)}
-                className={currentPage === page + 1 ? "bg-blue-400 text-white mx-1" : "bg-white border border-black text-black mx-1"}
+                className={
+                  currentPage === page + 1
+                    ? "bg-blue-400 text-white mx-1"
+                    : "bg-white border border-black text-black mx-1"
+                }
               >
                 {page + 1}
               </Button>
             ))}
-            <Button onClick={handleNextPage} disabled={currentPage >= Math.ceil(sortedUsers.length / 10)} className="mx-2 bg-black text-white">
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage >= Math.ceil(sortedUsers.length / 10)}
+              className="mx-2 bg-black text-white"
+            >
               다음
             </Button>
           </div>

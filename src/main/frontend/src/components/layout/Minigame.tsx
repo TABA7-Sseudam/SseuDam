@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { auth } from "@/lib/firebase/firebase";
 
 interface MinigameProps {
   className?: string;
@@ -12,24 +13,28 @@ export default function Minigame({ className }: MinigameProps) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const hasInitialized = useRef(false); // ✅ 중복 실행 방지
+  const hasInitialized = useRef(false);
 
-  // ✅ 로그인한 사용자 이메일 가져오기
   useEffect(() => {
-    if (hasInitialized.current) return; // ✅ 한 번만 실행
+    if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-    if (storedUser?.email) {
-      console.log("✅ 로그인된 사용자 이메일:", storedUser.email);
-      setUserEmail(storedUser.email);
-    } else {
-      console.warn("⚠️ 사용자 정보 없음. 로그인 필요");
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      if (storedUser?.email) {
+        console.log("✅ 로그인된 사용자 이메일:", storedUser.email);
+        setUserEmail(storedUser.email);
+      } else {
+        console.warn("⚠️ 사용자 정보 없음. 로그인 필요");
+      }
+    } catch (err) {
+      console.error("사용자 정보 파싱 중 오류:", err);
+      setError("사용자 정보를 불러올 수 없습니다.");
     }
   }, []);
 
-  // ✅ 퀴즈 데이터 (퀴즈 개수 증가)
   const quizQuestions = [
     {
       question: "플라스틱 병을 올바르게 버리려면?",
@@ -83,44 +88,77 @@ export default function Minigame({ className }: MinigameProps) {
     },
   ];
 
-  // ✅ 정답 제출 & 포인트 적립 API 호출
   const submitCorrectAnswer = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
-      const token = localStorage.getItem("authToken");
+      // Firebase 토큰 가져오기
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error("로그인이 필요합니다.");
+      }
+
+      // 토큰 새로 가져오기
+      const idToken = await currentUser.getIdToken(true);
+      
+      // API 요청
       const response = await fetch("http://54.180.242.43:8080/api/quiz/correct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${idToken}`
         },
-        body: JSON.stringify({ userEmail }),
+        body: JSON.stringify({
+          userEmail: currentUser.email,
+          points: 1
+        })
       });
 
+      if (response.status === 401) {
+        throw new Error("인증이 만료되었습니다. 다시 로그인해주세요.");
+      }
+
       if (!response.ok) {
-        throw new Error("포인트 적립에 실패했습니다.");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "포인트 적립에 실패했습니다.");
       }
 
       const data = await response.json();
-      console.log("✅ 포인트 적립 성공:", data.message);
+      console.log("✅ 포인트 적립 성공:", data);
+      return true;
+
     } catch (error) {
-      console.error(error);
-      alert("⚠️ 포인트 적립 중 오류가 발생했습니다.");
+      console.error("포인트 적립 오류:", error);
+      const errorMessage = error instanceof Error ? error.message : "포인트 적립 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      return false;
+
     } finally {
       setLoading(false);
     }
   };
 
   const handleAnswer = async (option: string) => {
-    if (!userEmail) return;
+    if (!userEmail) {
+      setError("로그인이 필요한 서비스입니다.");
+      return;
+    }
+
+    if (loading) {
+      return; // 중복 제출 방지
+    }
 
     setSelectedAnswer(option);
     let newScore = score;
 
     if (option === quizQuestions[quizIndex].answer) {
-      newScore += 1;
-      setMessage("✅ 정답입니다! +1점");
-      await submitCorrectAnswer();
+      setMessage("정답 확인 중...");
+      const pointsAdded = await submitCorrectAnswer();
+      if (pointsAdded) {
+        newScore += 1;
+        setMessage("✅ 정답입니다! +1점");
+      }
     } else {
       setMessage("❌ 틀렸어요! 다시 도전해보세요.");
     }
@@ -129,6 +167,7 @@ export default function Minigame({ className }: MinigameProps) {
 
     setTimeout(() => {
       setMessage("");
+      setError(null);
       setSelectedAnswer(null);
       setQuizIndex(Math.floor(Math.random() * quizQuestions.length));
     }, 2000);
@@ -147,6 +186,12 @@ export default function Minigame({ className }: MinigameProps) {
         <p className="text-center text-sm text-gray-200">점수: {score}</p>
       ) : (
         <p className="text-center text-sm text-red-400">로그인이 필요합니다.</p>
+      )}
+
+      {error && (
+        <div className="bg-red-500 p-2 rounded text-sm text-white text-center">
+          {error}
+        </div>
       )}
 
       {userEmail && (
