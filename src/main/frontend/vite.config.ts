@@ -1,6 +1,6 @@
-import * as path from 'path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import * as path from 'path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
@@ -9,23 +9,27 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // 전역 변수 설정: 브라우저 환경에서 global을 빈 객체로 정의
   define: {
-    global: {},
+    global: {}, // ✅ global 정의하여 브라우저 환경 대응
   },
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api/v1')  // API 버전 추가
-      }
-    }
+        secure: false,  // 로컬 개발 환경에서는 false
+        rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
+      },
+    },
+    hmr: {
+      protocol: 'ws', // ✅ WebSocket 환경에서도 정상 동작하도록 설정
+    },
   },
   build: {
+    outDir: "dist", // ✅ Vercel이 올바르게 인식할 수 있도록 설정
     rollupOptions: {
       external: ['bootstrap-icons'],
     },
+    chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일로 인한 경고 방지
   },
-})
+});
