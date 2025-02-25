@@ -363,7 +363,7 @@ export default function WasteAnalysisPage() {
   // 렌더링
   // ──────────────────────────────────────────────
   return (
-    <div className={`min-h-screen bg-white overflow-hidden relative ${styles.pageContainer}`}>
+    <div className={`min-h-screen bg-white overflow-hidden relative pt-16 ${styles.pageContainer}`}>
       <BackgroundAnimation />
 
       {/* 왼쪽 상단 STEP 표시 */}
@@ -375,7 +375,7 @@ export default function WasteAnalysisPage() {
         {/* (A) 인트로 섹션 */}
         <section
           ref={(el) => el && (sections[0] = el)}
-          className={`min-w-full h-screen flex flex-col items-center justify-center text-center bg-white/50 relative ${styles.section}`}
+          className={`min-w-full h-screen flex flex-col items-center justify-center text-center bg-white/40 relative mt-[-64px] ${styles.section}`}
         >
           <motion.h1
             className={`text-5xl font-extrabold text-gray-900 mb-6 drop-shadow-xl ${styles.mainTitle}`}

@@ -8,16 +8,28 @@ export function SettingsPage() {
   const [isPushEnabled, setIsPushEnabled] = useState(true)
 
   return (
-    <div className="w-[400px] mx-auto min-h-screen flex flex-col bg-gray-50 text-gray-900 overflow-hidden shadow-xl rounded-xl">
+    <div className="w-[500px]  mx-auto min-h-screen flex flex-col bg-[#EAEFF5]  text-gray-900 overflow-hidden shadow-xl rounded-2xl">
+       <div 
+       style={{
+        position: "fixed",
+        inset: 0, // 상하좌우 전체를 덮도록 설정
+        height: "100%",
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom, rgba(217, 234, 244, 0.9), rgba(251, 248, 239, 0.9))",
+        backdropFilter: "blur(3px)",
+        zIndex: -1 // ✅ 배경을 맨 뒤로 보내기
+        }}
+        ></div>
+
       {/* 🔝 헤더 */}
-      <div className="flex items-center justify-between px-6 py-5 bg-white shadow-md rounded-t-xl">
+      <div className="flex items-center justify-between px-6 py-5 bg-#E8EFF4  shadow-md rounded-t-xl">
         <button onClick={() => navigate(-1)} className="text-gray-600 text-lg">←</button>
-        <h1 className="text-xl font-semibold">설정</h1>
+        <h1 className="text-2xl font-semibold">설정</h1>
         <div className="w-6"></div> {/* 우측 정렬 맞추기 */}
       </div>
 
       {/* ⚙️ 설정 목록 */}
-      <div className="mt-4 bg-white shadow-md rounded-xl flex-1 overflow-auto divide-y">
+      <div className="mt-4 bg-#E8EFF4  shadow-md rounded-xl flex-1 overflow-auto divide-y text-lg">
         <SettingItem icon={<UserIcon size={22} />} text="비밀번호 재설정" onClick={() => navigate("/settings/account")} />
         <SettingItem icon={<BellIcon size={22} />} text="알림 설정">
           <StyledToggleSwitch isEnabled={isPushEnabled} onToggle={() => setIsPushEnabled(!isPushEnabled)} />

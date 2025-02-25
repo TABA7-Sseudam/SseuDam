@@ -178,7 +178,7 @@ export default function Minigame({ className }: MinigameProps) {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`hidden md:flex flex-col w-64 bg-[#43A047] text-white p-6 space-y-4 rounded-r-lg shadow-lg ${className}`}
+      className={`hidden md:flex flex-col w-64 bg-[#4CAF50] text-white p-6 space-y-4 rounded-r-lg shadow-lg ${className}`}
     >
       <h2 className="text-2xl font-bold text-center whitespace-nowrap">🌿 친환경 미니게임</h2>
 

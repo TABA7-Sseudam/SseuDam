@@ -5,10 +5,10 @@ import { ChevronsLeft, ChevronsRight, ArrowRightCircle, Pencil } from "lucide-re
 import BackgroundAnimation from "../layout/BackgroudAnimation";
 
 interface BoardItem {
-  id: string;
-  classification: string;
-  title: string;
-  date: string;
+  id: string
+  classification: string
+  title: string
+  date: string
 }
 
 export default function BulletinBoard() {
@@ -59,7 +59,7 @@ export default function BulletinBoard() {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" style={{ backgroundColor: 'rgba(251, 248, 239, 0.9)' }}>
       <BackgroundAnimation />
       <div className="flex min-h-screen bg-green-50 relative z-50 pt-16">
         {/* 사이드바 - 카테고리 선택 */}
@@ -129,11 +129,17 @@ export default function BulletinBoard() {
               {[1, 2, 3, 4, 5].map((page) => (
                 <Button key={page} onClick={() => handlePageClick(page)} className={`mx-1 px-4 py-2 ${currentPage === page ? "bg-green-700 text-white" : "bg-green-300 border border-black text-black hover:bg-green-500"}`}>
                   {page}
-                </Button>
+                </button>
               ))}
-              <Button onClick={handleNextPage} disabled={currentPage === totalPages} className="mx-2 bg-green-500 text-white hover:bg-green-700 flex items-center">
-                Next <ChevronsRight className="ml-1" />
-              </Button>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 rounded mx-2 text-white"
+                style={{ backgroundColor: 'rgba(217, 234, 244, 0.9)' }}
+              >
+                <ChevronsRight />
+              </button>
             </div>
           </div>
         </div>
