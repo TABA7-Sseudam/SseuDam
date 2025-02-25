@@ -10,9 +10,9 @@ export default defineConfig({
     },
   },
   define: {
-    global: {}, // ✅ global 정의하여 브라우저 환경 대응
+    global: {}, // ✅ global을 빈 객체로 정의하여 브라우저 환경에서 사용
   },
-  base: "./",  // ✅ Vercel에서 정적 파일을 올바르게 찾을 수 있도록 설정
+  base: "./",  // ✅ Vercel에서 정적 파일 경로가 올바르게 설정되도록 함
   server: {
     proxy: {
       '/api': {
@@ -27,22 +27,22 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "dist", // ✅ Vercel이 올바르게 인식할 수 있도록 설정
-    chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일로 인한 경고 방지 (1MB 제한)
+    outDir: "dist", // ✅ Vercel이 인식할 수 있는 출력 폴더
+    chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일 경고 제한 (1MB)
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor-react'; // ✅ React 관련 번들을 따로 분리
+              return 'vendor-react'; // React 관련 모듈 분리
             }
             if (id.includes('firebase')) {
-              return 'vendor-firebase'; // ✅ Firebase 관련 모듈 분리
+              return 'vendor-firebase'; // Firebase 관련 모듈 분리
             }
             if (id.includes('recharts') || id.includes('framer-motion')) {
-              return 'vendor-graph'; // ✅ 차트 및 애니메이션 관련 모듈 분리
+              return 'vendor-graph'; // 차트 및 애니메이션 관련 모듈 분리
             }
-            return 'vendor'; // ✅ 기타 라이브러리 분리
+            return 'vendor'; // 그 외 모듈 분리
           }
         },
       },
