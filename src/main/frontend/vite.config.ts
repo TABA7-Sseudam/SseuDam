@@ -12,13 +12,12 @@ export default defineConfig({
   define: {
     global: {}, // ✅ global 정의하여 브라우저 환경 대응
   },
-  base: "./", // ✅ Vercel 배포 시 경로 문제 해결
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false, // 로컬 개발 환경에서는 false
+        secure: false,  // 로컬 개발 환경에서는 false
         rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
       },
     },
@@ -28,12 +27,24 @@ export default defineConfig({
   },
   build: {
     outDir: "dist", // ✅ Vercel이 올바르게 인식할 수 있도록 설정
+    chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일로 인한 경고 방지 (1MB 제한)
     rollupOptions: {
-      external: ['bootstrap-icons'],
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor-react'; // ✅ React 관련 번들을 따로 분리
+            }
+            if (id.includes('firebase')) {
+              return 'vendor-firebase'; // ✅ Firebase 관련 모듈 분리
+            }
+            if (id.includes('recharts') || id.includes('framer-motion')) {
+              return 'vendor-graph'; // ✅ 차트 및 애니메이션 관련 모듈 분리
+            }
+            return 'vendor'; // ✅ 기타 라이브러리 분리
+          }
+        },
+      },
     },
-    chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일로 인한 경고 방지
-  },
-  optimizeDeps: {
-    exclude: ["sockjs-client"], // ✅ WebSocket 관련 문제 방지
   },
 });
