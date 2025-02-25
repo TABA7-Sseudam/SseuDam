@@ -12,12 +12,13 @@ export default defineConfig({
   define: {
     global: {}, // ✅ global 정의하여 브라우저 환경 대응
   },
+  base: "./", // ✅ Vercel 배포 시 경로 문제 해결
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false,  // 로컬 개발 환경에서는 false
+        secure: false, // 로컬 개발 환경에서는 false
         rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
       },
     },
@@ -31,5 +32,8 @@ export default defineConfig({
       external: ['bootstrap-icons'],
     },
     chunkSizeWarningLimit: 1000, // ✅ 큰 번들 파일로 인한 경고 방지
+  },
+  optimizeDeps: {
+    exclude: ["sockjs-client"], // ✅ WebSocket 관련 문제 방지
   },
 });
