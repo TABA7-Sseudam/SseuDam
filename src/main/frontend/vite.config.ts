@@ -10,7 +10,9 @@ export default defineConfig({
       // 라이브러리 충돌 방지를 위한 별칭 설정
       'styled-components': path.resolve(__dirname, 'node_modules', 'styled-components'),
       'react': path.resolve(__dirname, 'node_modules', 'react'),
-      'react-dom': path.resolve(__dirname, 'node_modules', 'react-dom')
+      'react-dom': path.resolve(__dirname, 'node_modules', 'react-dom'),
+      // firebase 모듈의 ESM 엔트리를 명시적으로 사용
+      'firebase': path.resolve(__dirname, 'node_modules/firebase/app'),
     },
   },
   define: {
@@ -19,7 +21,7 @@ export default defineConfig({
     // SSR 관련 변수 추가
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
   },
-  base: "./",  // Vercel에서 정적 파일 경로가 올바르게 설정되도록 함
+  base: "./", // Vercel에서 정적 파일 경로가 올바르게 설정되도록 함
   server: {
     proxy: {
       '/api': {
@@ -38,7 +40,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000, // 큰 번들 파일 경고 제한 (1MB)
     rollupOptions: {
       output: {
-        // 파일 이름 형식을 명시적으로 지정하여 MIME 타입 오류 방지
+        // 파일 이름 형식을 명시적으로 지정하여 MIME 타입 문제 방지
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
@@ -76,6 +78,7 @@ export default defineConfig({
   },
   // SSR 호환성 향상을 위한 설정
   optimizeDeps: {
+    include: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
     esbuildOptions: {
       define: {
         global: 'globalThis'
