@@ -1,26 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/firebase/firebase";
 
-interface ActionBarProps {
-  users: Array<{
-    name: string;
-    avatar: string;
-  }>;
-}
-
 interface Note {
   [key: string]: string;
 }
 
-const ActionBar: React.FC<ActionBarProps> = ({ users }) => {
+const ActionBar: React.FC<{ userData: any }> = ({ userData }) => {
   const [date, setDate] = useState<Date | null>(new Date());
   const [notes, setNotes] = useState<Note>({});
   const [inputValue, setInputValue] = useState("");
 
-  // 컴포넌트 마운트 시 저장된 메모 불러오기
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
@@ -35,7 +27,6 @@ const ActionBar: React.FC<ActionBarProps> = ({ users }) => {
     setInputValue(e.target.value);
   };
 
-  // 저장 버튼 클릭 시 메모 저장
   const handleSaveNote = () => {
     if (!date || !inputValue.trim()) return;
 
@@ -55,7 +46,6 @@ const ActionBar: React.FC<ActionBarProps> = ({ users }) => {
     setInputValue(""); // 입력 필드 초기화
   };
 
-  // 엔터 키로도 저장 가능하도록 유지
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSaveNote();
@@ -69,51 +59,49 @@ const ActionBar: React.FC<ActionBarProps> = ({ users }) => {
     }
   };
 
-  // 메모 삭제 기능 추가
   const handleDeleteNote = (dateKey: string) => {
     const currentUser = auth.currentUser;
     if (!currentUser) return;
 
     const updatedNotes = { ...notes };
     delete updatedNotes[dateKey];
-    
+
     setNotes(updatedNotes);
     localStorage.setItem(`notes_${currentUser.uid}`, JSON.stringify(updatedNotes));
   };
 
   return (
-    <div className=" flex flex-col items-center gap-4 p-4 bg-#E8EFF4 rounded-lg shadow-lg">
-      {users.length > 0 && (
-        <div className="flex gap-2 mb-4">
-          {users.map((user, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="text-sm text-gray-700">{user.name}</span>
-            </div>
-          ))}
+    <div className="flex flex-col items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-lg">
+      {/* 사용자 프로필 정보 가져오기 */}
+      {userData && (
+        <div className="flex gap-2 mb-4 items-center">
+          <img
+            src={userData.selectedIcon || "/default-avatar.png"} // 사용자 프로필 아이콘 적용
+            alt="사용자 아이콘"
+            className="w-10 h-10 rounded-full border border-gray-300"
+          />
+          <span className="text-lg font-semibold text-gray-800">
+            {userData.nickname || "사용자"}
+          </span>
         </div>
       )}
 
       <div className="text-center mb-2 font-semibold text-black text-lg">
         📅 날짜 선택
       </div>
-      
-      <Calendar 
-        onChange={handleDateChange} 
-        value={date} 
+
+      <Calendar
+        onChange={handleDateChange}
+        value={date}
         className="rounded-lg shadow-md text-black"
         calendarType="gregory"
       />
-      
+
       <div className="w-full flex gap-2">
-        <input 
-          type="text" 
-          placeholder="메모를 입력하세요..." 
-          value={inputValue} 
+        <input
+          type="text"
+          placeholder="메모를 입력하세요..."
+          value={inputValue}
           onChange={handleNoteChange}
           onKeyDown={handleKeyDown}
           className="flex-1 mt-2 p-2 border rounded-lg text-black"
