@@ -10,24 +10,22 @@ export default defineConfig({
       // 라이브러리 충돌 방지를 위한 별칭 설정
       'styled-components': path.resolve(__dirname, 'node_modules', 'styled-components'),
       'react': path.resolve(__dirname, 'node_modules', 'react'),
-      'react-dom': path.resolve(__dirname, 'node_modules', 'react-dom'),
-      // firebase 모듈의 ESM 엔트리를 명시적으로 사용
-      'firebase': path.resolve(__dirname, 'node_modules/firebase/app'),
+      'react-dom': path.resolve(__dirname, 'node_modules', 'react-dom')
+      // firebase 관련 alias 제거 → Vite가 기본 방식으로 모듈을 찾도록 함
     },
   },
   define: {
-    // global을 window로 설정하여 SSR 환경 호환성 향상
+    // 브라우저 환경에서 global을 window로 설정
     global: 'window',
-    // SSR 관련 변수 추가
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
   },
-  base: "./", // Vercel에서 정적 파일 경로가 올바르게 설정되도록 함
+  base: "./", // Vercel 등에서 정적 파일 경로가 올바르게 설정되도록 함
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false,  // 로컬 개발 환경에서는 false
+        secure: false, // 로컬 개발 환경에서는 false
         rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
       },
     },
@@ -36,27 +34,21 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "dist", // Vercel이 인식할 수 있는 출력 폴더
+    outDir: "dist", // Vercel 등에서 올바른 출력 폴더 인식
     chunkSizeWarningLimit: 1000, // 큰 번들 파일 경고 제한 (1MB)
     rollupOptions: {
       output: {
-        // 파일 이름 형식을 명시적으로 지정하여 MIME 타입 문제 방지
+        // 파일 이름 형식 지정으로 MIME 타입 오류 방지
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
-        // 명시적 청크 분리를 통한 번들 최적화
+        // 청크 분리 (코드 스플리팅)
         manualChunks: {
-          // React 코어 라이브러리
           'vendor-react-core': ['react', 'react-dom'],
-          // React 라우터 및 관련 라이브러리
           'vendor-react-router': ['react-router-dom'],
-          // UI 컴포넌트 라이브러리
           'vendor-ui': ['styled-components', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-          // 차트 및 애니메이션 라이브러리
           'vendor-viz': ['recharts', 'framer-motion'],
-          // Firebase 관련 모듈
-          'vendor-firebase': ['firebase'],
-          // 기타 UI 라이브러리
+          'vendor-firebase': ['firebase'], // Firebase는 별도로 묶음
           'vendor-ui-extra': [
             '@radix-ui/react-navigation-menu',
             '@radix-ui/react-slot',
@@ -64,19 +56,16 @@ export default defineConfig({
             '@radix-ui/react-avatar',
             '@radix-ui/react-alert-dialog'
           ],
-          // 기타 유틸리티 라이브러리
           'vendor-utils': ['axios', 'recoil', 'zustand', 'zod'],
-          // 캘린더 관련 라이브러리
           'vendor-calendar': ['react-calendar']
         }
       },
     },
-    // SSR 및 ESM/CJS 변환 호환성 향상
     commonjsOptions: {
       transformMixedEsModules: true,
     },
   },
-  // SSR 호환성 향상을 위한 설정
+  // Firebase 모듈을 pre-bundle하도록 설정하여 빌드 오류 해결
   optimizeDeps: {
     include: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
     esbuildOptions: {
