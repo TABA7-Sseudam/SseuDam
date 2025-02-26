@@ -1,16 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>쓰담</title>
+    
+    <!-- SSR 호환성을 위한 사전 설정 -->
+    <script>
+      // window 객체가 있을 때만 실행 (서버에서는 무시됨)
+      window.global = window;
+      
+      // useLayoutEffect 경고 무시
+      if (typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
+        __REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function() {};
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
-
-
