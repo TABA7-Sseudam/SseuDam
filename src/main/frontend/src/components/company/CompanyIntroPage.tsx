@@ -71,7 +71,7 @@ export function CompanyIntroPage() {
         </video>
 
         {/* 텍스트 컨테이너 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20 flex flex-col items-center justify-center text-center text-white px-6">
+        <div className="absolute inset-0 bg-gradient-to-b flex flex-col items-center justify-center text-center text-white px-6">
           <motion.h1 
             initial={{ opacity: 0, y: 50 }} 
             animate={{ opacity: 1, y: 0 }} 
