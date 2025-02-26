@@ -42,7 +42,7 @@ export default defineConfig({
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
-        // 문제가 발생하는 vendor 번들 수정 - 명시적 청크 분리
+        // 명시적 청크 분리를 통한 번들 최적화
         manualChunks: {
           // React 코어 라이브러리
           'vendor-react-core': ['react', 'react-dom'],
@@ -52,7 +52,7 @@ export default defineConfig({
           'vendor-ui': ['styled-components', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
           // 차트 및 애니메이션 라이브러리
           'vendor-viz': ['recharts', 'framer-motion'],
-          // Firebase
+          // Firebase 관련 모듈
           'vendor-firebase': ['firebase'],
           // 기타 UI 라이브러리
           'vendor-ui-extra': [
