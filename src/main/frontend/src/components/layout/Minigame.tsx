@@ -14,6 +14,7 @@ export default function Minigame({ className }: MinigameProps) {
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [quizAttempts, setQuizAttempts] = useState(0);
 
   const hasInitialized = useRef(false);
 
@@ -32,6 +33,17 @@ export default function Minigame({ className }: MinigameProps) {
     } catch (err) {
       console.error("사용자 정보 파싱 중 오류:", err);
       setError("사용자 정보를 불러올 수 없습니다.");
+    }
+
+    // 퀴즈 횟수 로드
+    const today = new Date().toISOString().split("T")[0];
+    const storedAttempts = JSON.parse(localStorage.getItem("quizAttempts") || "{}");
+
+    if (storedAttempts.date === today) {
+      setQuizAttempts(storedAttempts.count);
+    } else {
+      localStorage.setItem("quizAttempts", JSON.stringify({ date: today, count: 0 }));
+      setQuizAttempts(0);
     }
   }, []);
 
@@ -93,16 +105,13 @@ export default function Minigame({ className }: MinigameProps) {
     setError(null);
 
     try {
-      // Firebase 토큰 가져오기
       const currentUser = auth.currentUser;
       if (!currentUser) {
         throw new Error("로그인이 필요합니다.");
       }
 
-      // 토큰 새로 가져오기
       const idToken = await currentUser.getIdToken(true);
 
-      // API 요청
       const response = await fetch("http://54.180.242.43:8080/api/quiz/correct", {
         method: "POST",
         headers: {
@@ -124,16 +133,11 @@ export default function Minigame({ className }: MinigameProps) {
         throw new Error(errorData.message || "포인트 적립에 실패했습니다.");
       }
 
-      const data = await response.json();
-      console.log("✅ 포인트 적립 성공:", data);
+      console.log("✅ 포인트 적립 성공");
       return true;
     } catch (error) {
       console.error("포인트 적립 오류:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "포인트 적립 중 오류가 발생했습니다.";
-      setError(errorMessage);
+      setError(error instanceof Error ? error.message : "포인트 적립 중 오류 발생");
       return false;
     } finally {
       setLoading(false);
@@ -146,8 +150,8 @@ export default function Minigame({ className }: MinigameProps) {
       return;
     }
 
-    if (loading) {
-      return; // 중복 제출 방지
+    if (loading || quizAttempts >= 3) {
+      return; // 중복 제출 방지 또는 3회 초과 시 막기
     }
 
     setSelectedAnswer(option);
@@ -165,6 +169,12 @@ export default function Minigame({ className }: MinigameProps) {
     }
 
     setScore(newScore);
+    const newAttempts = quizAttempts + 1;
+    setQuizAttempts(newAttempts);
+
+    // localStorage에 진행 횟수 저장
+    const today = new Date().toISOString().split("T")[0];
+    localStorage.setItem("quizAttempts", JSON.stringify({ date: today, count: newAttempts }));
 
     setTimeout(() => {
       setMessage("");
@@ -189,14 +199,10 @@ export default function Minigame({ className }: MinigameProps) {
         <p className="text-center text-sm text-red-400">로그인이 필요합니다.</p>
       )}
 
-      {/* 오류 표시 영역 */}
       {error && (
-        <div className="bg-red-500 p-2 rounded text-sm text-white text-center">
-          {error}
-        </div>
+        <div className="bg-red-500 p-2 rounded text-sm text-white text-center">{error}</div>
       )}
 
-      {/* 퀴즈 영역: userEmail이 있을 때만 표시 */}
       {userEmail && (
         <div className="bg-green-700 p-4 rounded-lg shadow">
           <h3 className="text-xl font-semibold">🌱 환경 퀴즈</h3>
@@ -216,7 +222,7 @@ export default function Minigame({ className }: MinigameProps) {
                       : "bg-red-500"
                     : "bg-[#4CAF50] hover:bg-green-500"
                 }`}
-                disabled={selectedAnswer !== null || loading}
+                disabled={selectedAnswer !== null || loading || quizAttempts >= 3}
               >
                 {loading && option === quizQuestions[quizIndex].answer
                   ? "포인트 적립 중..."
@@ -225,8 +231,8 @@ export default function Minigame({ className }: MinigameProps) {
             ))}
           </div>
 
-          {/* 정/오답 메시지 */}
           {message && <p className="mt-2 text-sm text-center">{message}</p>}
+          {quizAttempts >= 3 && <p className="text-red-300 text-sm text-center">오늘의 퀴즈 제한 도달!</p>}
         </div>
       )}
     </motion.div>
